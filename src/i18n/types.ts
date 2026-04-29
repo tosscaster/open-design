@@ -344,6 +344,10 @@ export interface Dict {
   'designFiles.kindSketch': string;
   'designFiles.kindText': string;
   'designFiles.kindCode': string;
+  'designFiles.kindPdf': string;
+  'designFiles.kindDocument': string;
+  'designFiles.kindPresentation': string;
+  'designFiles.kindSpreadsheet': string;
   'designFiles.kindBinary': string;
   'pasteDialog.title': string;
   'pasteDialog.hint': string;
@@ -367,6 +371,11 @@ export interface Dict {
   'fileViewer.share': string;
   'fileViewer.binaryMeta': string;
   'fileViewer.binaryNote': string;
+  'fileViewer.pdfMeta': string;
+  'fileViewer.documentMeta': string;
+  'fileViewer.presentationMeta': string;
+  'fileViewer.spreadsheetMeta': string;
+  'fileViewer.previewUnavailable': string;
   'fileViewer.download': string;
   'fileViewer.open': string;
   'fileViewer.imageMeta': string;

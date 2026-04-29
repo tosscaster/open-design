@@ -446,7 +446,7 @@ function Tab({
   onActivate: () => void;
   onClose?: () => void;
   closable?: boolean;
-  kind?: 'html' | 'image' | 'sketch' | 'text' | 'code' | 'binary';
+  kind?: ProjectFile['kind'];
 }) {
   const t = useT();
   const iconName = kindIconName(kind);

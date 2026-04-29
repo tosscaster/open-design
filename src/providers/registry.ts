@@ -97,6 +97,32 @@ export function projectFileUrl(projectId: string, name: string): string {
   return projectRawUrl(projectId, name);
 }
 
+export interface ProjectFilePreviewSection {
+  title: string;
+  lines: string[];
+}
+
+export interface ProjectFilePreview {
+  kind: 'pdf' | 'document' | 'presentation' | 'spreadsheet';
+  title: string;
+  sections: ProjectFilePreviewSection[];
+}
+
+export async function fetchProjectFilePreview(
+  projectId: string,
+  name: string,
+): Promise<ProjectFilePreview | null> {
+  try {
+    const resp = await fetch(
+      `/api/projects/${encodeURIComponent(projectId)}/files/${encodeURIComponent(name)}/preview`,
+    );
+    if (!resp.ok) return null;
+    return (await resp.json()) as ProjectFilePreview;
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchProjectFileText(
   projectId: string,
   name: string,

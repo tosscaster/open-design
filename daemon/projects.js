@@ -181,6 +181,10 @@ const EXT_MIME = {
   '.json': 'application/json; charset=utf-8',
   '.md': 'text/markdown; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8',
+  '.pdf': 'application/pdf',
+  '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
@@ -211,5 +215,9 @@ export function kindFor(name) {
   if (['.js', '.mjs', '.cjs', '.ts', '.tsx', '.json', '.css'].includes(ext)) {
     return 'code';
   }
+  if (ext === '.pdf') return 'pdf';
+  if (ext === '.docx') return 'document';
+  if (ext === '.pptx') return 'presentation';
+  if (ext === '.xlsx') return 'spreadsheet';
   return 'binary';
 }

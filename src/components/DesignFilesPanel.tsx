@@ -356,6 +356,12 @@ function sectionFor(file: ProjectFile): Section {
   if (file.kind === 'sketch') return 'sketches';
   if (file.kind === 'code') return 'scripts';
   if (file.kind === 'image') return 'images';
+  if (
+    file.kind === 'pdf' ||
+    file.kind === 'document' ||
+    file.kind === 'presentation' ||
+    file.kind === 'spreadsheet'
+  ) return 'pages';
   return 'other';
 }
 
@@ -365,6 +371,10 @@ function kindGlyph(kind: ProjectFileKind): string {
   if (kind === 'sketch') return '✎';
   if (kind === 'text') return '¶';
   if (kind === 'code') return '{}';
+  if (kind === 'pdf') return 'PDF';
+  if (kind === 'document') return 'DOC';
+  if (kind === 'presentation') return 'PPT';
+  if (kind === 'spreadsheet') return 'XLS';
   return '·';
 }
 
@@ -374,6 +384,10 @@ function kindLabel(kind: ProjectFileKind, t: TranslateFn): string {
   if (kind === 'sketch') return t('designFiles.kindSketch');
   if (kind === 'text') return t('designFiles.kindText');
   if (kind === 'code') return t('designFiles.kindCode');
+  if (kind === 'pdf') return t('designFiles.kindPdf');
+  if (kind === 'document') return t('designFiles.kindDocument');
+  if (kind === 'presentation') return t('designFiles.kindPresentation');
+  if (kind === 'spreadsheet') return t('designFiles.kindSpreadsheet');
   return t('designFiles.kindBinary');
 }
 

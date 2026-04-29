@@ -2621,6 +2621,34 @@ code {
   color: var(--text-muted);
   font-size: 13px;
 }
+.document-preview {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 40px 56px;
+  color: var(--text);
+}
+.document-preview h2 {
+  margin: 0 0 24px;
+  font-size: 20px;
+  line-height: 1.25;
+}
+.document-preview section {
+  border-top: 1px solid var(--border-soft);
+  padding-top: 18px;
+  margin-top: 18px;
+}
+.document-preview h3 {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.document-preview p {
+  margin: 0 0 8px;
+  font-size: 14px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
 .image-body {
   display: flex;
   align-items: center;

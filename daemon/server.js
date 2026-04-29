@@ -20,6 +20,7 @@ import { createCopilotStreamHandler } from './copilot-stream.js';
 import { renderDesignSystemPreview } from './design-system-preview.js';
 import { renderDesignSystemShowcase } from './design-system-showcase.js';
 import { importClaudeDesignZip } from './claude-design-import.js';
+import { buildDocumentPreview } from './document-preview.js';
 import { lintArtifact, renderFindingsForAgent } from './lint-artifact.js';
 import {
   deleteProjectFile,
@@ -728,6 +729,17 @@ export async function startServer({ port = 7456 } = {}) {
     } catch (err) {
       const code = err && err.code === 'ENOENT' ? 404 : 400;
       res.status(code).json({ error: String(err) });
+    }
+  });
+
+  app.get('/api/projects/:id/files/:name/preview', async (req, res) => {
+    try {
+      const file = await readProjectFile(PROJECTS_DIR, req.params.id, req.params.name);
+      const preview = await buildDocumentPreview(file);
+      res.json(preview);
+    } catch (err) {
+      const status = err && err.statusCode ? err.statusCode : err && err.code === 'ENOENT' ? 404 : 400;
+      res.status(status).json({ error: err?.message || 'preview unavailable' });
     }
   });
 

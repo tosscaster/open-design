@@ -149,6 +149,10 @@ export type ProjectFileKind =
   | 'sketch'
   | 'text'
   | 'code'
+  | 'pdf'
+  | 'document'
+  | 'presentation'
+  | 'spreadsheet'
   | 'binary';
 
 export interface ProjectFile {

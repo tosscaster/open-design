@@ -1,11 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useT } from '../i18n';
-import { fetchProjectFileText, projectFileUrl, projectRawUrl } from '../providers/registry';
+import type { Dict } from '../i18n/types';
+import {
+  fetchProjectFilePreview,
+  fetchProjectFileText,
+  projectFileUrl,
+  projectRawUrl,
+} from '../providers/registry';
+import type { ProjectFilePreview } from '../providers/registry';
 import { exportAsHtml, exportAsPdf, exportAsZip } from '../runtime/exports';
 import { buildSrcdoc } from '../runtime/srcdoc';
 import { saveTemplate } from '../state/projects';
 import type { ProjectFile } from '../types';
 import { Icon } from './Icon';
+
+type TranslateFn = (key: keyof Dict, vars?: Record<string, string | number>) => string;
 
 interface Props {
   projectId: string;
@@ -45,7 +54,44 @@ export function FileViewer({
   if (file.kind === 'text' || file.kind === 'code') {
     return <TextViewer projectId={projectId} file={file} />;
   }
+  if (
+    file.kind === 'pdf' ||
+    file.kind === 'document' ||
+    file.kind === 'presentation' ||
+    file.kind === 'spreadsheet'
+  ) {
+    return <DocumentPreviewViewer projectId={projectId} file={file} />;
+  }
   return <BinaryViewer projectId={projectId} file={file} />;
+}
+
+function FileActions({
+  projectId,
+  file,
+}: {
+  projectId: string;
+  file: ProjectFile;
+}) {
+  const t = useT();
+  return (
+    <div className="viewer-toolbar-actions">
+      <a
+        className="ghost-link"
+        href={projectFileUrl(projectId, file.name)}
+        download={file.name}
+      >
+        {t('fileViewer.download')}
+      </a>
+      <a
+        className="ghost-link"
+        href={projectFileUrl(projectId, file.name)}
+        target="_blank"
+        rel="noreferrer noopener"
+      >
+        {t('fileViewer.open')}
+      </a>
+    </div>
+  );
 }
 
 function BinaryViewer({
@@ -64,28 +110,71 @@ function BinaryViewer({
             {t('fileViewer.binaryMeta', { size: humanSize(file.size) })}
           </span>
         </div>
-        <div className="viewer-toolbar-actions">
-          <a
-            className="ghost-link"
-            href={projectFileUrl(projectId, file.name)}
-            download={file.name}
-          >
-            {t('fileViewer.download')}
-          </a>
-          <a
-            className="ghost-link"
-            href={projectFileUrl(projectId, file.name)}
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            {t('fileViewer.open')}
-          </a>
-        </div>
+        <FileActions projectId={projectId} file={file} />
       </div>
       <div className="viewer-body">
         <div className="viewer-empty">
           {t('fileViewer.binaryNote', { size: file.size })}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function DocumentPreviewViewer({
+  projectId,
+  file,
+}: {
+  projectId: string;
+  file: ProjectFile;
+}) {
+  const t = useT();
+  const [preview, setPreview] = useState<ProjectFilePreview | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setPreview(null);
+    void fetchProjectFilePreview(projectId, file.name).then((next) => {
+      if (!cancelled) {
+        setPreview(next);
+        setLoading(false);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [projectId, file.name, file.mtime]);
+
+  return (
+    <div className="viewer document-viewer">
+      <div className="viewer-toolbar">
+        <div className="viewer-toolbar-left">
+          <span className="viewer-meta">
+            {documentMetaLabel(file, t)} · {humanSize(file.size)}
+          </span>
+        </div>
+        <FileActions projectId={projectId} file={file} />
+      </div>
+      <div className="viewer-body">
+        {loading ? (
+          <div className="viewer-empty">{t('fileViewer.loading')}</div>
+        ) : preview ? (
+          <div className="document-preview">
+            <h2>{preview.title}</h2>
+            {preview.sections.map((section, idx) => (
+              <section key={`${section.title}-${idx}`}>
+                <h3>{section.title}</h3>
+                {section.lines.map((line, lineIdx) => (
+                  <p key={`${lineIdx}-${line}`}>{line}</p>
+                ))}
+              </section>
+            ))}
+          </div>
+        ) : (
+          <div className="viewer-empty">{t('fileViewer.previewUnavailable')}</div>
+        )}
       </div>
     </div>
   );
@@ -800,4 +889,12 @@ function humanSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+
+function documentMetaLabel(file: ProjectFile, t: TranslateFn): string {
+  if (file.kind === 'pdf') return t('fileViewer.pdfMeta');
+  if (file.kind === 'document') return t('fileViewer.documentMeta');
+  if (file.kind === 'presentation') return t('fileViewer.presentationMeta');
+  if (file.kind === 'spreadsheet') return t('fileViewer.spreadsheetMeta');
+  return t('fileViewer.binaryMeta', { size: humanSize(file.size) });
 }
