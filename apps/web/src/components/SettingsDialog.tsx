@@ -9,7 +9,8 @@ import {
   isCustomModel,
   renderModelOptions,
 } from './modelOptions';
-import { KNOWN_PROVIDERS } from '../state/config';
+import { DEFAULT_NOTIFICATIONS, KNOWN_PROVIDERS } from '../state/config';
+import type { KnownProvider } from '../state/config';
 import {
   MAX_MAX_TOKENS,
   MIN_MAX_TOKENS,
@@ -20,7 +21,6 @@ import { MEDIA_PROVIDERS } from '../media/models';
 import type { MediaProvider } from '../media/models';
 import { PetSettings } from './pet/PetSettings';
 import { LibrarySection } from './LibrarySection';
-import { DEFAULT_NOTIFICATIONS } from '../state/config';
 import {
   FAILURE_SOUNDS,
   SUCCESS_SOUNDS,
@@ -163,6 +163,63 @@ function defaultApiProtocolConfig(protocol: ApiProtocol): ApiProtocolConfig {
   };
 }
 
+function providerFamilyLabel(provider: KnownProvider): string {
+  return provider.label.replace(/\s+—\s+(Anthropic|OpenAI)$/u, '');
+}
+
+function siblingProviderForProtocol(
+  providerBaseUrl: string | null | undefined,
+  protocol: ApiProtocol,
+): KnownProvider | null {
+  if (!providerBaseUrl) return null;
+  const currentProvider = KNOWN_PROVIDERS.find(
+    (p) => p.baseUrl === providerBaseUrl,
+  );
+  if (!currentProvider) return null;
+
+  const currentFamily = providerFamilyLabel(currentProvider);
+  return (
+    KNOWN_PROVIDERS.find(
+      (p) => p.protocol === protocol && providerFamilyLabel(p) === currentFamily,
+    ) ?? null
+  );
+}
+
+function nextApiProtocolConfig(
+  config: AppConfig,
+  protocol: ApiProtocol,
+): ApiProtocolConfig {
+  const savedConfig = config.apiProtocolConfigs?.[protocol];
+  if (savedConfig) return savedConfig;
+
+  const currentConfig = currentApiProtocolConfig(config);
+  const siblingProvider = siblingProviderForProtocol(
+    currentConfig.apiProviderBaseUrl,
+    protocol,
+  );
+  if (siblingProvider) {
+    return {
+      ...defaultApiProtocolConfig(protocol),
+      baseUrl: siblingProvider.baseUrl,
+      model: siblingProvider.model,
+      apiProviderBaseUrl: siblingProvider.baseUrl,
+    };
+  }
+
+  if (currentConfig.apiProviderBaseUrl === null) {
+    return {
+      ...currentConfig,
+      apiKey: '',
+      apiVersion: protocol === 'azure' ? currentConfig.apiVersion : '',
+      apiProviderBaseUrl: null,
+    };
+  }
+
+  return {
+    ...defaultApiProtocolConfig(protocol),
+  };
+}
+
 function currentApiProtocolConfig(config: AppConfig): ApiProtocolConfig {
   return {
     apiKey: config.apiKey,
@@ -279,8 +336,13 @@ export function switchApiProtocolConfig(
     ...(config.apiProtocolConfigs ?? {}),
     [currentProtocol]: currentApiProtocolConfig(config),
   };
-  const nextApiConfig =
-    apiProtocolConfigs[protocol] ?? defaultApiProtocolConfig(protocol);
+  const nextApiConfig = nextApiProtocolConfig(
+    {
+      ...config,
+      apiProtocolConfigs,
+    },
+    protocol,
+  );
   return applyApiProtocolConfig(
     {
       ...config,
