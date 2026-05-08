@@ -8290,7 +8290,8 @@ button.ghost.mcp-copy-btn:hover:not(:disabled) {
   color: var(--red);
   font-size: 11px;
 }
-.inspect-empty-hint {
+
+.inspect-empty-hint-container {
   position: absolute;
   top: 14px;
   right: 14px;
@@ -8301,8 +8302,18 @@ button.ghost.mcp-copy-btn:hover:not(:disabled) {
   background: var(--bg-panel);
   color: var(--text-muted);
   font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
   pointer-events: none;
 }
+
+.inspect-empty-hint-container button,
+.inspect-empty-hint-container .close-button {
+  pointer-events: auto;
+}
+
 .inspect-empty-hint code {
   padding: 1px 5px;
   border-radius: 3px;
