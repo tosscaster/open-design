@@ -1883,6 +1883,19 @@ function MediaProvidersSection({
   setCfg: Dispatch<SetStateAction<AppConfig>>;
 }) {
   const { t } = useI18n();
+  const [visibleApiKeys, setVisibleApiKeys] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  );
+  useEffect(() => {
+    setVisibleApiKeys((current) => {
+      const next = new Set<string>();
+      for (const providerId of current) {
+        const apiKey = cfg.mediaProviders?.[providerId]?.apiKey ?? '';
+        if (apiKey.trim()) next.add(providerId);
+      }
+      return next.size === current.size ? current : next;
+    });
+  }, [cfg.mediaProviders]);
   const providers = MEDIA_PROVIDERS
     .filter((p) => p.settingsVisible !== false)
     .slice()
@@ -1911,6 +1924,17 @@ function MediaProvidersSection({
       return { ...curr, mediaProviders: map };
     });
   };
+  const toggleApiKeyVisibility = (providerId: string) => {
+    setVisibleApiKeys((current) => {
+      const next = new Set(current);
+      if (next.has(providerId)) {
+        next.delete(providerId);
+      } else {
+        next.add(providerId);
+      }
+      return next;
+    });
+  };
 
   return (
     <section className="settings-section">
@@ -1927,6 +1951,7 @@ function MediaProvidersSection({
           const disabled = !provider.integrated;
           const supportsCustomModel = provider.supportsCustomModel === true;
           const clearable = Boolean(entry.apiKey.trim() || entry.baseUrl.trim() || entry.model?.trim());
+          const apiKeyVisible = visibleApiKeys.has(provider.id);
           return (
             <div key={provider.id} className={`media-provider-row${provider.integrated ? '' : ' pending'}`}>
               <div className="media-provider-head">
@@ -1946,14 +1971,30 @@ function MediaProvidersSection({
                 </div>
               </div>
               <div className="media-provider-body">
-                <input
-                  type="password"
-                  value={entry.apiKey}
-                  placeholder={t('settings.mediaProviderPlaceholder')}
-                  aria-label={`${provider.label} ${t('settings.mediaProviderApiKey')}`}
-                  disabled={disabled}
-                  onChange={(e) => updateProvider(provider, { apiKey: e.target.value })}
-                />
+                <div className="media-provider-secret-field">
+                  <input
+                    type={apiKeyVisible ? 'text' : 'password'}
+                    value={entry.apiKey}
+                    placeholder={t('settings.mediaProviderPlaceholder')}
+                    aria-label={`${provider.label} ${t('settings.mediaProviderApiKey')}`}
+                    disabled={disabled}
+                    onChange={(e) => updateProvider(provider, { apiKey: e.target.value })}
+                  />
+                  <button
+                    type="button"
+                    className="secret-visibility-button"
+                    disabled={disabled}
+                    aria-label={
+                      apiKeyVisible
+                        ? `${provider.label} ${t('settings.hideKey')}`
+                        : `${provider.label} ${t('settings.showKey')}`
+                    }
+                    aria-pressed={apiKeyVisible}
+                    onClick={() => toggleApiKeyVisibility(provider.id)}
+                  >
+                    <Icon name={apiKeyVisible ? 'eye' : 'eye-off'} size={15} />
+                  </button>
+                </div>
                 <input
                   value={entry.baseUrl}
                   placeholder={provider.defaultBaseUrl || t('settings.mediaProviderBaseUrlPlaceholder')}
