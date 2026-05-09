@@ -108,7 +108,13 @@ const MAC_WINDOW_CHROME_CSS = `
   .ds-modal-backdrop,
   .ds-modal-backdrop *,
   .ds-modal,
-  .ds-modal * {
+  .ds-modal *,
+  .prompt-template-modal-backdrop,
+  .prompt-template-modal-backdrop *,
+  .prompt-template-modal,
+  .prompt-template-modal *,
+  .prompt-template-lightbox-backdrop,
+  .prompt-template-lightbox-backdrop * {
     -webkit-app-region: no-drag;
   }
   .entry-brand,
