@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 480" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <style>
+      .box { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .phase { fill: #fce4ec; }
+      .out { fill: #e8f5e9; }
+      .title { font-weight: 600; font-size: 14px; }
+      .small { font-size: 11px; fill: #555; }
+      .tiny { font-size: 10px; fill: #777; }
+      .arrow { stroke: #555; stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="500" y="28" text-anchor="middle" font-weight="700" font-size="16">tools-pack mac build — 7단계 파이프라인</text>
+
+  <g>
+    <!-- Phase 1 -->
+    <rect class="box phase" x="40" y="60" width="180" height="100"/>
+    <text font-weight="600" x="130" y="82" text-anchor="middle">1. workspace-build</text>
+    <text class="small" x="130" y="102" text-anchor="middle">ensureMacWorkspaceBuild</text>
+    <text class="small" x="130" y="118" text-anchor="middle">사전 빌드 체크</text>
+    <text class="small" x="130" y="134" text-anchor="middle">cache 비교</text>
+    <text class="tiny" x="130" y="152" text-anchor="middle">tsx workspace-build.ts</text>
+
+    <!-- Phase 2 -->
+    <rect class="box phase" x="240" y="60" width="180" height="100"/>
+    <text font-weight="600" x="330" y="82" text-anchor="middle">2. workspace-tarballs</text>
+    <text class="small" x="330" y="102" text-anchor="middle">collectWorkspaceTarballs</text>
+    <text class="small" x="330" y="118" text-anchor="middle">내부 패키지 압축</text>
+    <text class="small" x="330" y="134" text-anchor="middle">contracts, sidecar 등</text>
+    <text class="tiny" x="330" y="152" text-anchor="middle">npm pack 시뮬레이션</text>
+
+    <!-- Phase 3 -->
+    <rect class="box phase" x="440" y="60" width="180" height="100"/>
+    <text font-weight="600" x="530" y="82" text-anchor="middle">3. cache</text>
+    <text class="small" x="530" y="102" text-anchor="middle">PackageSourceHash</text>
+    <text class="small" x="530" y="118" text-anchor="middle">소스 해시 비교</text>
+    <text class="small" x="530" y="134" text-anchor="middle">변경 없으면 재사용</text>
+    <text class="tiny" x="530" y="152" text-anchor="middle">cache.ts + lock.ts</text>
+
+    <!-- Phase 4 -->
+    <rect class="box phase" x="640" y="60" width="180" height="100"/>
+    <text font-weight="600" x="730" y="82" text-anchor="middle">4. resources</text>
+    <text class="small" x="730" y="102" text-anchor="middle">resources.ts</text>
+    <text class="small" x="730" y="118" text-anchor="middle">skills/, design-systems/</text>
+    <text class="small" x="730" y="134" text-anchor="middle">frames/ 복사</text>
+    <text class="tiny" x="730" y="152" text-anchor="middle">→ OD_RESOURCE_ROOT</text>
+  </g>
+
+  <g>
+    <!-- Phase 5 -->
+    <rect class="box phase" x="40" y="200" width="180" height="100"/>
+    <text font-weight="600" x="130" y="222" text-anchor="middle">5. assembled-app</text>
+    <text class="small" x="130" y="242" text-anchor="middle">writeAssembledApp</text>
+    <text class="small" x="130" y="258" text-anchor="middle">apps/packaged 번들</text>
+    <text class="small" x="130" y="274" text-anchor="middle">esbuild + Electron</text>
+    <text class="tiny" x="130" y="292" text-anchor="middle">app.ts + app-config.ts</text>
+
+    <!-- Phase 6 -->
+    <rect class="box phase" x="240" y="200" width="180" height="100"/>
+    <text font-weight="600" x="330" y="222" text-anchor="middle">6. electron-builder</text>
+    <text class="small" x="330" y="242" text-anchor="middle">runElectronBuilder</text>
+    <text class="small" x="330" y="258" text-anchor="middle">--to all|app|dmg|zip</text>
+    <text class="small" x="330" y="274" text-anchor="middle">--signed → notarize</text>
+    <text class="tiny" x="330" y="292" text-anchor="middle">builder.ts</text>
+
+    <!-- Phase 7 -->
+    <rect class="box phase" x="440" y="200" width="180" height="100"/>
+    <text font-weight="600" x="530" y="222" text-anchor="middle">7. artifacts</text>
+    <text class="small" x="530" y="242" text-anchor="middle">finalizeMacArtifacts</text>
+    <text class="small" x="530" y="258" text-anchor="middle">.dmg / .zip 정리</text>
+    <text class="small" x="530" y="274" text-anchor="middle">크기 리포트</text>
+    <text class="tiny" x="530" y="292" text-anchor="middle">artifacts.ts</text>
+
+    <!-- Outputs -->
+    <rect class="box out" x="640" y="200" width="320" height="100"/>
+    <text font-weight="600" x="800" y="222" text-anchor="middle">산출물</text>
+    <text class="small" x="800" y="242" text-anchor="middle">_release/&lt;namespace&gt;/mac/</text>
+    <text class="small" x="800" y="258" text-anchor="middle">  Open Design.app  (dir target)</text>
+    <text class="small" x="800" y="274" text-anchor="middle">  Open Design.dmg  (dmg target)</text>
+    <text class="small" x="800" y="290" text-anchor="middle">  Open Design.zip  (zip target)</text>
+  </g>
+
+  <!-- Arrows -->
+  <path class="arrow" d="M 220 110 L 240 110"/>
+  <path class="arrow" d="M 420 110 L 440 110"/>
+  <path class="arrow" d="M 620 110 L 640 110"/>
+  <path class="arrow" d="M 730 160 C 600 175, 250 175, 130 200"/>
+  <path class="arrow" d="M 220 250 L 240 250"/>
+  <path class="arrow" d="M 420 250 L 440 250"/>
+  <path class="arrow" d="M 620 250 L 640 250"/>
+
+  <!-- Lifecycle notes -->
+  <rect class="box" x="40" y="340" width="920" height="120"/>
+  <text class="title" x="55" y="362">패키지 라이프사이클 명령 (mac/win/linux 공통)</text>
+  <text class="small" x="55" y="382">- tools-pack &lt;plat&gt; install — DMG/zip/AppImage에서 시스템 설치 위치로 복사 (/Applications, %APPDATA%, etc.)</text>
+  <text class="small" x="55" y="398">- tools-pack &lt;plat&gt; start / stop / logs / inspect — 설치된 앱 라이프사이클 제어</text>
+  <text class="small" x="55" y="414">- tools-pack &lt;plat&gt; uninstall / cleanup / list / reset — 정리</text>
+  <text class="small" x="55" y="432">- 모든 데이터/로그/캐시 경로는 namespace로만 스코프 — 포트는 transient (AGENTS.md 강제)</text>
+  <text class="small" x="55" y="448">- Linux는 --containerized로 Docker electronuserland/builder에서 빌드 가능 (호스트 무관)</text>
+</svg>

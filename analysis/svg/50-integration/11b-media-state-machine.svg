@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c62828"/>
+    </marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/>
+    </marker>
+    <style>
+      .state { stroke: #333; stroke-width: 1.4; rx: 40; fill: #fff; }
+      .init { fill: #e3f2fd; }
+      .work { fill: #fff3e0; }
+      .done { fill: #e8f5e9; }
+      .err { fill: #ffebee; stroke: #c62828; }
+      .interrupt { fill: #f5f5f5; }
+      .arrow { stroke: #555; stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+      .ok { stroke: #2e7d32; stroke-width: 1.4; fill: none; marker-end: url(#arrG); }
+      .fail { stroke: #c62828; stroke-width: 1.4; fill: none; marker-end: url(#arrR); }
+      .title { font-weight: 600; font-size: 14px; }
+      .small { font-size: 11px; fill: #555; }
+      .lbl { font-size: 11px; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="450" y="28" text-anchor="middle" font-weight="700" font-size="16">media_tasks — 상태 머신 (CHECK 제약 5종)</text>
+
+  <!-- queued -->
+  <rect class="state init" x="60" y="80" width="170" height="60"/>
+  <text font-weight="600" x="145" y="105" text-anchor="middle">queued</text>
+  <text class="small" x="145" y="125" text-anchor="middle">POST /api/.../media/generate</text>
+
+  <!-- running -->
+  <rect class="state work" x="350" y="80" width="200" height="60"/>
+  <text font-weight="600" x="450" y="105" text-anchor="middle">running</text>
+  <text class="small" x="450" y="125" text-anchor="middle">render&lt;Provider&gt;() 실행 중</text>
+
+  <!-- done -->
+  <rect class="state done" x="670" y="80" width="170" height="60"/>
+  <text font-weight="600" x="755" y="105" text-anchor="middle">done</text>
+  <text class="small" x="755" y="125" text-anchor="middle">file_json 채워짐</text>
+
+  <!-- failed -->
+  <rect class="state err" x="670" y="220" width="170" height="60"/>
+  <text font-weight="600" x="755" y="245" text-anchor="middle">failed</text>
+  <text class="small" x="755" y="265" text-anchor="middle">error_json 기록</text>
+
+  <!-- interrupted -->
+  <rect class="state interrupt" x="350" y="360" width="200" height="60"/>
+  <text font-weight="600" x="450" y="385" text-anchor="middle">interrupted</text>
+  <text class="small" x="450" y="405" text-anchor="middle">데몬 재시작 / SIGTERM</text>
+
+  <!-- transitions -->
+  <path class="arrow" d="M 230 110 L 350 110"/>
+  <text class="lbl" x="240" y="100">작업 큐 → 실행</text>
+
+  <path class="ok" d="M 550 110 L 670 110"/>
+  <text class="lbl" x="560" y="100" fill="#2e7d32">정상 완료</text>
+
+  <path class="fail" d="M 550 140 C 600 170, 650 200, 670 220"/>
+  <text class="lbl" x="615" y="180" fill="#c62828">프로바이더 4xx/5xx</text>
+  <text class="lbl" x="615" y="195" fill="#c62828">timeout · 검증 실패</text>
+
+  <path class="arrow" d="M 450 140 L 450 360"/>
+  <text class="lbl" x="460" y="220">running 중 데몬 셧다운</text>
+  <text class="lbl" x="460" y="235">→ 부팅 시 incomplete task 마킹</text>
+
+  <path class="arrow" d="M 350 390 C 200 380, 145 200, 145 140" stroke-dasharray="4 3"/>
+  <text class="lbl" x="180" y="285">재시도 (사용자 요청)</text>
+
+  <!-- progress streaming -->
+  <rect x="40" y="450" width="820" height="60" rx="6" fill="#fafafa" stroke="#ccc"/>
+  <text class="title" x="55" y="473">진행도 스트리밍</text>
+  <text class="small" x="55" y="491">- progress_json[] — 각 row가 한 줄 메시지 ("HyperFrames: 32/120 frames", ...)</text>
+  <text class="small" x="55" y="505">- POST /api/media/tasks/:id/wait?since=N — long-poll 25초 max · 증분만 반환</text>
+
+  <!-- side notes -->
+  <rect x="40" y="220" width="280" height="170" rx="6" fill="#fafafa" stroke="#ccc"/>
+  <text class="title" x="55" y="243">테이블 컬럼</text>
+  <text class="small" x="55" y="263">id  PK</text>
+  <text class="small" x="55" y="278">project_id  FK CASCADE</text>
+  <text class="small" x="55" y="293">status  CHECK 5종</text>
+  <text class="small" x="55" y="308">surface · model</text>
+  <text class="small" x="55" y="323">progress_json · file_json · error_json</text>
+  <text class="small" x="55" y="338">started_at · ended_at</text>
+  <text class="small" x="55" y="353">created_at · updated_at</text>
+  <text class="small" x="55" y="373" font-style="italic">idx (project_id, updated_at DESC)</text>
+</svg>

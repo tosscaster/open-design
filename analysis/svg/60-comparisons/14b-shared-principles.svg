@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 620" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <style>
+      .box { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .pHdr { fill: #37474f; }
+      .pTxt { fill: #fff; font-weight: 700; }
+      .a   { fill: #e3f2fd; }
+      .b   { fill: #fff8e1; }
+      .title { font-weight: 600; font-size: 14px; }
+      .small { font-size: 11.5px; fill: #444; }
+      .tiny  { font-size: 10px; fill: #777; }
+      .col   { font-size: 11px; font-weight: 700; fill: #263238; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="540" y="34" text-anchor="middle" font-weight="700" font-size="18">세 가지 공유 원칙과 두 시스템의 구현</text>
+  <text x="540" y="56" text-anchor="middle" class="small">Anthropic harness 글과 Open Design이 같이 채택한 메타 원칙. 격자가 다를 뿐 원칙은 같다.</text>
+
+  <!-- Principle 1 -->
+  <rect class="pHdr" x="40" y="86" width="1000" height="32" rx="6"/>
+  <text class="pTxt" x="60" y="108">원칙 1 — 행위자와 판단자를 분리한다</text>
+  <text class="pTxt" x="1020" y="108" text-anchor="end" font-size="11">self-evaluation의 과대 긍정성 회피</text>
+
+  <rect class="box a" x="40" y="130" width="490" height="120"/>
+  <text class="col"  x="60" y="150">Anthropic 글</text>
+  <text class="small" x="60" y="172">Generator와 Evaluator를 별도 에이전트 프로세스로 분리</text>
+  <text class="small" x="60" y="190">Evaluator = Playwright MCP로 실행 중인 앱을 실제 조작</text>
+  <text class="small" x="60" y="208">구체적 PASS / FAIL 비평으로 다음 iteration에 피드백</text>
+  <text class="tiny"  x="60" y="232">비용 ↑ · 시간 ↑ · 객체성 ↑</text>
+
+  <rect class="box b" x="550" y="130" width="490" height="120"/>
+  <text class="col"  x="570" y="150">Open Design</text>
+  <text class="small" x="570" y="172">행위자 = agent CLI · 판단자 = 같은 세션의 강제 단계</text>
+  <text class="small" x="570" y="190">Critique Theater 5-패널 (panel.ts) + skill checklist P0</text>
+  <text class="small" x="570" y="208">사용자가 iframe srcdoc로 외부 판정 (HMAC 게이트)</text>
+  <text class="tiny"  x="570" y="232">비용 ↓ · 거버넌스 ↓ · 사용자 in-the-loop</text>
+
+  <!-- Principle 2 -->
+  <rect class="pHdr" x="40" y="270" width="1000" height="32" rx="6"/>
+  <text class="pTxt" x="60" y="292">원칙 2 — 기준은 결정론적으로 명문화한다</text>
+  <text class="pTxt" x="1020" y="292" text-anchor="end" font-size="11">"기준의 표현이 generator를 이끈다"</text>
+
+  <rect class="box a" x="40" y="314" width="490" height="120"/>
+  <text class="col"  x="60" y="334">Anthropic 글</text>
+  <text class="small" x="60" y="356">Sprint contract — 생성자/평가자가 "완료" 정의에 합의</text>
+  <text class="small" x="60" y="374">평가 차원 명시: 디자인 품질, 독창성, 기술, 기능성</text>
+  <text class="small" x="60" y="392">Few-shot 캘리브레이션으로 평가자 선호 일치</text>
+  <text class="tiny"  x="60" y="416">자유 ↓ · 예측 가능성 ↑</text>
+
+  <rect class="box b" x="550" y="314" width="490" height="120"/>
+  <text class="col"  x="570" y="334">Open Design</text>
+  <text class="small" x="570" y="356">11-레이어 시스템 프롬프트 (system.ts), DISCOVERY 최상위</text>
+  <text class="small" x="570" y="374">5개 OKLch 방향 spec block — "model freestyle" 봉쇄</text>
+  <text class="small" x="570" y="392">Turn 1 폼 JSON 스키마, anti-AI-slop 부정 기준</text>
+  <text class="tiny"  x="570" y="416">자유 ↓ · 산출 일관성 ↑</text>
+
+  <!-- Principle 3 -->
+  <rect class="pHdr" x="40" y="454" width="1000" height="32" rx="6"/>
+  <text class="pTxt" x="60" y="476">원칙 3 — 모델 능력이 변하면 harness가 옮겨간다</text>
+  <text class="pTxt" x="1020" y="476" text-anchor="end" font-size="11">"공간은 사라지지 않고 이동한다"</text>
+
+  <rect class="box a" x="40" y="498" width="490" height="100"/>
+  <text class="col"  x="60" y="518">Anthropic 글</text>
+  <text class="small" x="60" y="540">4.5 → 4.6: sprint 분해 제거, 단일 세션 연속 빌드</text>
+  <text class="small" x="60" y="558">컴팩션만으론 부족 → 완전 컨텍스트 리셋 + 핸드오프</text>
+  <text class="tiny"  x="60" y="582">변화: 컴포넌트를 빼낸다</text>
+
+  <rect class="box b" x="550" y="498" width="490" height="100"/>
+  <text class="col"  x="570" y="518">Open Design</text>
+  <text class="small" x="570" y="540">Capability probe: `agent -p --help` → 플래그 캐싱</text>
+  <text class="small" x="570" y="558">invariant matrix로 함께 고쳐야 할 파일 추적 (§10)</text>
+  <text class="tiny"  x="570" y="582">변화: 어댑터 슬롯/플래그가 모델 진화를 흡수</text>
+</svg>

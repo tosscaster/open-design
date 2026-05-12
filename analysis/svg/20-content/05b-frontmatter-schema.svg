@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 620" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <style>
+      .box { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .req { fill: #fff3e0; }
+      .cat { fill: #e3f2fd; }
+      .opt { fill: #f5f5f5; }
+      .inj { fill: #e8f5e9; }
+      .preview { fill: #fce4ec; }
+      .title { font-weight: 600; font-size: 14px; }
+      .small { font-size: 11px; fill: #555; }
+      .mono { font-family: ui-monospace, Menlo, monospace; font-size: 11px; }
+      .pill { font-size: 10px; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="460" y="28" text-anchor="middle" font-weight="700" font-size="16">SKILL.md frontmatter — od:* 스키마</text>
+
+  <!-- Top: minimal required -->
+  <rect class="box req" x="40" y="55" width="840" height="80"/>
+  <text class="title" x="55" y="78">필수 필드 (frontmatter 루트)</text>
+  <text class="mono" x="55" y="100">name: "your-skill-id"            </text>
+  <text class="small" x="280" y="100">— 고유 ID (kebab-case 권장; 폴더명 폴백)</text>
+  <text class="mono" x="55" y="118">description: "..."               </text>
+  <text class="small" x="280" y="118">— UI 카드 한 줄 설명</text>
+
+  <!-- Categorization -->
+  <rect class="box cat" x="40" y="155" width="410" height="220"/>
+  <text class="title" x="55" y="178">od.* 분류 필드</text>
+  <text class="mono" x="55" y="200">mode:</text>
+  <text class="small" x="120" y="200">prototype | deck | image | video</text>
+  <text class="small" x="120" y="215">       | audio | template | design-system</text>
+  <text class="small" x="120" y="230">       | utility   (누락 시 본문에서 추론)</text>
+
+  <text class="mono" x="55" y="252">surface:</text>
+  <text class="small" x="120" y="252">web | image | video | audio</text>
+
+  <text class="mono" x="55" y="272">platform:</text>
+  <text class="small" x="120" y="272">desktop | mobile | null</text>
+
+  <text class="mono" x="55" y="292">scenario:</text>
+  <text class="small" x="120" y="292">design / marketing / engineering / ...</text>
+
+  <text class="mono" x="55" y="312">category:</text>
+  <text class="small" x="120" y="312">필터 슬러그 (^[a-z0-9-]+$ 만)</text>
+
+  <text class="mono" x="55" y="332">fidelity:</text>
+  <text class="small" x="120" y="332">wireframe | high-fidelity | null</text>
+
+  <text class="mono" x="55" y="352">triggers:</text>
+  <text class="small" x="120" y="352">["트리거 문장 1", ...]</text>
+
+  <!-- Display -->
+  <rect class="box opt" x="470" y="155" width="410" height="220"/>
+  <text class="title" x="485" y="178">광고 / 표시 필드</text>
+  <text class="mono" x="485" y="200">featured:</text>
+  <text class="small" x="555" y="200">int — 매거진 row 우선순위 (낮을수록 상단)</text>
+
+  <text class="mono" x="485" y="220">default_for:</text>
+  <text class="small" x="585" y="220">[surface] — 기본 선택</text>
+
+  <text class="mono" x="485" y="240">upstream:</text>
+  <text class="small" x="555" y="240">"https://github.com/owner/repo"</text>
+
+  <text class="mono" x="485" y="260">example_prompt:</text>
+  <text class="small" x="608" y="260">"Use this prompt" 버튼 텍스트</text>
+
+  <text class="mono" x="485" y="280">speaker_notes:</text>
+  <text class="small" x="608" y="280">true|false (deck 모드 힌트)</text>
+
+  <text class="mono" x="485" y="300">animations:</text>
+  <text class="small" x="572" y="300">true|false (deck 모드 힌트)</text>
+
+  <text class="mono" x="485" y="320">preview:</text>
+  <text class="small" x="555" y="320">{ type: "html", entry: "index.html" }</text>
+
+  <!-- Injection -->
+  <rect class="box inj" x="40" y="395" width="410" height="160"/>
+  <text class="title" x="55" y="418">컨텍스트 주입 (시스템 프롬프트 합성에 영향)</text>
+  <text class="mono" x="55" y="442">craft:</text>
+  <text class="mono" x="55" y="458">  requires:</text>
+  <text class="small" x="155" y="458">[typography, color, anti-ai-slop, ...]</text>
+  <text class="small" x="55" y="478">→ craft/&lt;slug&gt;.md 본문이 system prompt에 주입</text>
+
+  <text class="mono" x="55" y="503">design_system:</text>
+  <text class="mono" x="55" y="519">  requires:</text>
+  <text class="small" x="155" y="519">true | false  (기본 true)</text>
+  <text class="mono" x="55" y="535">  sections:</text>
+  <text class="small" x="155" y="535">[color, typography, components, ...]</text>
+
+  <!-- Preview -->
+  <rect class="box preview" x="470" y="395" width="410" height="160"/>
+  <text class="title" x="485" y="418">파일시스템 (선택)</text>
+  <text class="mono" x="485" y="442">assets/template.html</text>
+  <text class="small" x="630" y="442">— seed 템플릿 → derivePreflight</text>
+  <text class="mono" x="485" y="462">references/checklist.md</text>
+  <text class="small" x="640" y="462">— P0/P1/P2 self-check</text>
+  <text class="mono" x="485" y="482">references/layouts.md</text>
+  <text class="small" x="630" y="482">— 허용 가능한 레이아웃 목록</text>
+  <text class="mono" x="485" y="502">examples/*.html</text>
+  <text class="small" x="600" y="502">— derived card 자동 생성</text>
+  <text class="mono" x="485" y="522">scripts/ · assets/</text>
+  <text class="small" x="608" y="522">— 정적 자산</text>
+  <text class="small" x="485" y="542" font-style="italic">본문에서 위 경로 언급 시 skill-root preamble이 자동 inject</text>
+
+  <!-- Footer note -->
+  <text class="small" x="460" y="585" text-anchor="middle">parseFrontmatter — 의존성 0 YAML 파서 · `---` 구분자 · 따옴표 친화적 타입 강제 · 들여쓰기 + 블록 리터럴 지원</text>
+</svg>

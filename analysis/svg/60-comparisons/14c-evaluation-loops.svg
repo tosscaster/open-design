@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 640" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arrE" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#37474f"/>
+    </marker>
+    <marker id="arrU" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1565c0"/>
+    </marker>
+    <style>
+      .node { stroke: #333; stroke-width: 1.3; rx: 10; fill: #fff; }
+      .actor { fill: #e8f5e9; }
+      .judge { fill: #fff3e0; }
+      .user  { fill: #ede7f6; }
+      .arr   { stroke: #37474f; stroke-width: 1.6; fill: none; marker-end: url(#arrE); }
+      .uarr  { stroke: #1565c0; stroke-width: 1.6; fill: none; marker-end: url(#arrU); }
+      .title { font-weight: 600; font-size: 14px; }
+      .head  { fill: #fff; font-weight: 700; }
+      .colHdr { fill: #263238; }
+      .small { font-size: 11px; fill: #444; }
+      .tiny  { font-size: 10px; fill: #777; }
+      .lbl   { font-size: 10.5px; fill: #555; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="540" y="32" text-anchor="middle" font-weight="700" font-size="18">검증 루프 — 외부 evaluator vs 강제 단계 + 사용자 in-the-loop</text>
+  <text x="540" y="54" text-anchor="middle" class="small">같은 압력("모델 자기 평가는 과대 긍정적이다")을 두 격자가 다르게 푼다.</text>
+
+  <!-- Column headers -->
+  <rect class="colHdr" x="40" y="82" width="490" height="34" rx="6"/>
+  <text class="head" x="285" y="104" text-anchor="middle">Anthropic 글 — 별도 Evaluator 에이전트</text>
+
+  <rect class="colHdr" x="550" y="82" width="490" height="34" rx="6"/>
+  <text class="head" x="795" y="104" text-anchor="middle">Open Design — Critique Theater + 사용자 iframe</text>
+
+  <!-- LEFT: Anthropic loop -->
+  <rect class="node actor" x="80" y="146" width="180" height="60"/>
+  <text class="title" x="170" y="173" text-anchor="middle">Generator</text>
+  <text class="small" x="170" y="192" text-anchor="middle">FastAPI + React 코드 작성</text>
+
+  <rect class="node actor" x="310" y="146" width="180" height="60"/>
+  <text class="title" x="400" y="173" text-anchor="middle">실행 중인 앱</text>
+  <text class="small" x="400" y="192" text-anchor="middle">localhost dev 서버</text>
+
+  <rect class="node judge" x="310" y="266" width="180" height="60"/>
+  <text class="title" x="400" y="293" text-anchor="middle">Playwright MCP</text>
+  <text class="small" x="400" y="312" text-anchor="middle">클릭 · 스크린샷 · DOM</text>
+
+  <rect class="node judge" x="80" y="266" width="180" height="60"/>
+  <text class="title" x="170" y="293" text-anchor="middle">Evaluator 에이전트</text>
+  <text class="small" x="170" y="312" text-anchor="middle">PASS/FAIL 비평 생성</text>
+
+  <rect class="node" x="80" y="380" width="410" height="120" fill="#fafafa"/>
+  <text class="title" x="100" y="404">평가 차원 (글 §평가 기준)</text>
+  <text class="small" x="100" y="424">· 디자인 품질 · 독창성 · 기술성 · 기능성</text>
+  <text class="small" x="100" y="442">· Sprint contract — "완료" 합의</text>
+  <text class="small" x="100" y="460">· Few-shot 캘리브레이션으로 점수 편차 ↓</text>
+  <text class="tiny"  x="100" y="484">비용: 추가 LLM 호출, 추가 시간. 객체성: 높음</text>
+
+  <!-- Arrows LEFT -->
+  <path class="arr" d="M 260 176 L 308 176"/>
+  <text class="lbl" x="270" y="170">deploy</text>
+  <path class="arr" d="M 400 208 L 400 264"/>
+  <text class="lbl" x="406" y="240">drive UI</text>
+  <path class="arr" d="M 308 296 L 262 296"/>
+  <text class="lbl" x="270" y="290">screenshots</text>
+  <path class="arr" d="M 170 264 C 170 234, 130 220, 130 206 L 170 206"/>
+  <text class="lbl" x="60" y="240">critique → next iter</text>
+
+  <!-- RIGHT: Open Design loop -->
+  <rect class="node actor" x="590" y="146" width="180" height="60"/>
+  <text class="title" x="680" y="173" text-anchor="middle">Agent CLI 자식</text>
+  <text class="small" x="680" y="192" text-anchor="middle">stdout JSONL · stream-json</text>
+
+  <rect class="node actor" x="820" y="146" width="180" height="60"/>
+  <text class="title" x="910" y="173" text-anchor="middle">데몬 정규화</text>
+  <text class="small" x="910" y="192" text-anchor="middle">ChatSseEvent union</text>
+
+  <rect class="node judge" x="590" y="266" width="180" height="60"/>
+  <text class="title" x="680" y="293" text-anchor="middle">강제 self-critique</text>
+  <text class="small" x="680" y="312" text-anchor="middle">5-패널 + 5-차원 radar</text>
+
+  <rect class="node judge" x="820" y="266" width="180" height="60"/>
+  <text class="title" x="910" y="293" text-anchor="middle">checklist.md P0</text>
+  <text class="small" x="910" y="312" text-anchor="middle">skill별 비-협상 기준</text>
+
+  <rect class="node user" x="590" y="380" width="410" height="120"/>
+  <text class="title" x="610" y="404">iframe srcdoc + e2e</text>
+  <text class="small" x="610" y="424">· iframe 샌드박스 (HMAC 데스크탑 게이트)</text>
+  <text class="small" x="610" y="442">· 사용자가 직접 미리보기 후 다음 턴 요청</text>
+  <text class="small" x="610" y="460">· e2e/tests/ — red spec → fix → green (외부)</text>
+  <text class="tiny"  x="610" y="484">비용: same-session 단계만. 객체성: 사용자에 위임</text>
+
+  <!-- Arrows RIGHT -->
+  <path class="arr" d="M 770 176 L 818 176"/>
+  <text class="lbl" x="778" y="170">SSE 이벤트</text>
+  <path class="arr" d="M 680 208 L 680 264"/>
+  <text class="lbl" x="686" y="240">prompt 강제</text>
+  <path class="arr" d="M 770 296 L 818 296"/>
+  <text class="lbl" x="780" y="290">병행 검증</text>
+  <path class="uarr" d="M 680 326 L 680 378"/>
+  <text class="lbl" x="690" y="358" fill="#1565c0">render</text>
+  <path class="uarr" d="M 910 326 L 910 378"/>
+  <text class="lbl" x="920" y="358" fill="#1565c0">사용자 검토</text>
+
+  <!-- Footer -->
+  <rect x="40" y="528" width="1000" height="92" rx="8" fill="#fafafa" stroke="#ccc"/>
+  <text class="title" x="60" y="552">트레이드오프</text>
+  <text class="small" x="60" y="572">· 글: 별도 에이전트라 비용/지연 ↑ 이지만 객체성 ↑. 모델만으로 평가가 닫힘.</text>
+  <text class="small" x="60" y="590">· OD: 강제 단계 + 사용자 in-the-loop로 비용 ↓. 그러나 디자인 품질 점수의 객체화는 약함.</text>
+  <text class="small" x="60" y="608">· 잠재 보강: 데몬 옆에 별도 평가자 라우트(예: Sonnet으로 스크린샷 5-차원 채점)를 두면 글의 격자를 부분 채택 가능.</text>
+</svg>

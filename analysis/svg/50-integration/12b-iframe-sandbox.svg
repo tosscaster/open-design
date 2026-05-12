@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c62828"/>
+    </marker>
+    <style>
+      .box { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .trusted { fill: #e8f5e9; }
+      .iframe { fill: #fce4ec; stroke: #c62828; stroke-width: 1.5; }
+      .layer { fill: #e3f2fd; }
+      .arrow { stroke: #555; stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+      .block { stroke: #c62828; stroke-width: 1.6; stroke-dasharray: 4 3; fill: none; marker-end: url(#arrR); }
+      .title { font-weight: 600; font-size: 14px; }
+      .small { font-size: 11px; fill: #555; }
+      .mono { font-family: ui-monospace, Menlo, monospace; font-size: 11px; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="450" y="28" text-anchor="middle" font-weight="700" font-size="16">샌드박스 아이프레임 — 보안 격리 레이어</text>
+
+  <!-- Outer: trusted parent -->
+  <rect class="box trusted" x="40" y="55" width="820" height="540"/>
+  <text class="title" x="55" y="80">신뢰 영역: apps/web (부모 origin)</text>
+  <text class="small" x="55" y="98">localStorage · 쿠키 · 세션 · 사용자 설정 보유</text>
+
+  <!-- Inner: untrusted iframe -->
+  <rect class="iframe" x="80" y="120" width="500" height="320" rx="8"/>
+  <text class="title" x="335" y="145" text-anchor="middle" fill="#c62828">신뢰 불가: artifact iframe</text>
+  <text class="small" x="335" y="163" text-anchor="middle">LLM이 생성한 HTML</text>
+
+  <rect x="100" y="180" width="460" height="50" rx="4" fill="#fff" stroke="#999"/>
+  <text class="mono" x="330" y="200" text-anchor="middle">sandbox="allow-scripts</text>
+  <text class="mono" x="330" y="216" text-anchor="middle">          allow-popups allow-popups-to-escape-sandbox"</text>
+
+  <text class="small" x="100" y="248" font-weight="600">활성:</text>
+  <text class="small" x="100" y="265">- script 실행 가능 (DOM 조작, fetch)</text>
+  <text class="small" x="100" y="282">- 새 탭 띄울 수 있음</text>
+
+  <text class="small" x="100" y="308" font-weight="600" fill="#c62828">비활성 (allow-same-origin 없음):</text>
+  <text class="small" x="100" y="325">- 부모 origin localStorage 접근 차단 → SecurityError</text>
+  <text class="small" x="100" y="342">- 부모 쿠키 접근 차단</text>
+  <text class="small" x="100" y="359">- 부모 document API 차단</text>
+
+  <text class="small" x="100" y="385" font-weight="600">대안: in-memory storage shim 자동 주입</text>
+  <text class="mono" x="100" y="403">(injectSandboxShim, apps/web/src/runtime/srcdoc.ts)</text>
+  <text class="small" x="100" y="421">→ data = {} closure로 localStorage 가짜 구현</text>
+
+  <!-- Communication channels -->
+  <rect class="layer" x="600" y="120" width="240" height="160"/>
+  <text class="title" x="615" y="145">postMessage 브릿지</text>
+  <text class="small" x="615" y="165" font-weight="600">iframe → 부모:</text>
+  <text class="small" x="615" y="182">- 현재 슬라이드 인덱스</text>
+  <text class="small" x="615" y="198">- 선택된 요소 (comment / inspect)</text>
+  <text class="small" x="615" y="220" font-weight="600">부모 → iframe:</text>
+  <text class="small" x="615" y="237">- od:palette (CSS 변수 변경)</text>
+  <text class="small" x="615" y="254">- od:inspect-set (검사 모드)</text>
+  <text class="small" x="615" y="271" font-style="italic">CSS value: UNSAFE 정규식 검증</text>
+
+  <!-- Link handling -->
+  <rect class="layer" x="600" y="300" width="240" height="140"/>
+  <text class="title" x="615" y="325">링크 처리</text>
+  <text class="small" x="615" y="345">허용:</text>
+  <text class="small" x="615" y="362">- #anchor (페이지 내)</text>
+  <text class="small" x="615" y="378">- http:// · https://</text>
+  <text class="small" x="615" y="394">- mailto:</text>
+  <text class="small" x="615" y="415" fill="#c62828">차단:</text>
+  <text class="small" x="615" y="430" fill="#c62828">- javascript: URL</text>
+
+  <!-- Threats blocked diagram -->
+  <rect class="box" x="80" y="465" width="760" height="115"/>
+  <text class="title" x="95" y="488">막아주는 위협 (LLM-생성 HTML이 시도해도 차단)</text>
+  <text class="small" x="95" y="508">- localStorage.getItem('jwt') 같은 세션 토큰 탈취 — sandbox로 SecurityError</text>
+  <text class="small" x="95" y="525">- document.cookie 추출 — sandbox로 차단</text>
+  <text class="small" x="95" y="542">- 부모 DOM 변형, 다른 iframe 콘텐츠 접근 — origin 분리</text>
+  <text class="small" x="95" y="559">- &lt;script src="https://malicious.com/..."&gt; 도 실행은 되지만 부모 origin은 아님</text>
+  <text class="small" x="95" y="576">- javascript:alert(1) 링크 — anchor click handler가 prefix 검증</text>
+</svg>

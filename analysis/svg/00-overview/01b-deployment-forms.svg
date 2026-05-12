@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 460" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <style>
+      .box { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .a { fill: #e3f2fd; }
+      .b { fill: #e8f5e9; }
+      .c { fill: #fff3e0; }
+      .d { fill: #fce4ec; }
+      .title { font-weight: 600; font-size: 14px; }
+      .small { font-size: 11px; fill: #555; }
+      .tiny  { font-size: 10px; fill: #777; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="450" y="28" text-anchor="middle" font-weight="700" font-size="16">같은 코드베이스, 4가지 배포 형태</text>
+
+  <rect class="box a" x="40" y="60" width="400" height="170"/>
+  <text class="title" x="55" y="85">1. 로컬 개발</text>
+  <text class="small" x="55" y="105">진입: pnpm tools-dev</text>
+  <text class="small" x="55" y="125">- daemon (포트 7456)</text>
+  <text class="small" x="55" y="142">- web (Next dev server, free port)</text>
+  <text class="small" x="55" y="159">- desktop (옵션)</text>
+  <text class="small" x="55" y="180">3개 사이드카, sidecar IPC로 연결</text>
+  <text class="tiny"  x="55" y="200">파일: .tmp/tools-dev/&lt;namespace&gt;/...</text>
+  <text class="tiny"  x="55" y="216">데이터: .od/app.sqlite</text>
+
+  <rect class="box b" x="460" y="60" width="400" height="170"/>
+  <text class="title" x="475" y="85">2. 로컬 단일 프로세스 CLI</text>
+  <text class="small" x="475" y="105">진입: `od` 바이너리 실행</text>
+  <text class="small" x="475" y="125">- daemon만 단일 프로세스</text>
+  <text class="small" x="475" y="142">- web은 static export(out/)를 daemon이 직접 서브</text>
+  <text class="small" x="475" y="159">- 별도 Next.js 서버 없음</text>
+  <text class="small" x="475" y="180">사이드카 미사용, IPC 미사용</text>
+  <text class="tiny"  x="475" y="200">apps/daemon/dist/cli.js 단일 엔트리</text>
+  <text class="tiny"  x="475" y="216">데이터: &lt;cwd&gt;/.od/</text>
+
+  <rect class="box c" x="40" y="250" width="400" height="180"/>
+  <text class="title" x="55" y="275">3. Vercel 웹 레이어</text>
+  <text class="small" x="55" y="295">진입: vercel.json + Next standalone</text>
+  <text class="small" x="55" y="315">- apps/web만 배포</text>
+  <text class="small" x="55" y="332">- daemon은 별도 호스팅 필요</text>
+  <text class="small" x="55" y="349">- (현재 데몬 미배포 — 마케팅/랜딩 위주)</text>
+  <text class="small" x="55" y="370">콘텐츠/스킬은 daemon 없으면 카탈로그 못 불러옴</text>
+  <text class="tiny"  x="55" y="395">SSR + Edge runtime</text>
+  <text class="tiny"  x="55" y="412">데이터: 호스팅된 daemon으로 위임</text>
+
+  <rect class="box d" x="460" y="250" width="400" height="180"/>
+  <text class="title" x="475" y="275">4. 패키지 데스크탑 앱</text>
+  <text class="small" x="475" y="295">진입: tools-pack mac|win|linux build</text>
+  <text class="small" x="475" y="315">- electron-builder + apps/packaged</text>
+  <text class="small" x="475" y="332">- daemon + web + desktop 사이드카 통합 번들</text>
+  <text class="small" x="475" y="349">- od:// 프로토콜 핸들러로 localhost 프록시</text>
+  <text class="small" x="475" y="370">macOS (apple silicon) · Windows x64 · Linux AppImage</text>
+  <text class="tiny"  x="475" y="395">데이터: ~/Library/Application Support/...</text>
+  <text class="tiny"  x="475" y="412">또는 OD_DATA_DIR 오버라이드</text>
+</svg>

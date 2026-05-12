@@ -20,7 +20,8 @@ analysis/
 ├── 30-runtime/         — 에이전트 스폰, 프롬프트, SSE 채팅, 시퀀스
 ├── 40-data/            — SQLite 영속성과 .od/ 레이아웃
 ├── 50-integration/     — BYOK 프록시, 미디어 생성, 보안 모델
-└── svg/                — 13개 SVG 다이어그램 (각 문서에서 임베드)
+├── 60-comparisons/     — 외부 글/시스템과의 비교 분석
+└── svg/                — SVG 다이어그램 (각 문서에서 임베드)
 ```
 
 ## 문서 인덱스
@@ -68,6 +69,12 @@ analysis/
 | [11-byok-and-media.md](./50-integration/11-byok-and-media.md) | BYOK 프록시(Anthropic/OpenAI/Azure/Google), SSE 정규화, SSRF 가드, 미디어 생성(gpt-image-2, Seedance, HyperFrames), media_tasks 비동기 추적 |
 | [12-security-model.md](./50-integration/12-security-model.md) | HMAC 데스크탑 게이트, `od://` 프로토콜, srcdoc iframe 샌드박스, 경로 검증, anti-AI-slop 린터, OAuth/MCP 토큰, 위협 모델 매트릭스 |
 
+### 60-comparisons/ — 외부 글/시스템과의 비교
+
+| 문서 | 내용 |
+|---|---|
+| [14-harness-comparison.md](./60-comparisons/14-harness-comparison.md) | Anthropic `harness-design-long-running-apps` 글의 Planner/Generator/Evaluator 3-에이전트 구조와 Open Design 데몬 중심 실행 구조의 격자 비교: 역할 매핑, 세 공유 원칙(행위자/판단자 분리·결정론적 명문화·모델 진화 적응), 검증 루프 트레이드오프 |
+
 ## 한눈에 보는 숫자
 
 - 워크스페이스: `apps/* + packages/* + tools/* + e2e` (pnpm 10.33.2, Node ~24)
@@ -96,6 +103,10 @@ analysis/
 
 ## 다이어그램 인덱스
 
+27개의 SVG 다이어그램이 [`svg/`](./svg/) 폴더 하위 5단 미러에 위치합니다. 각 문서는 메인 다이어그램(번호) + 보조 다이어그램(번호+b/c)으로 구성됩니다.
+
+### 메인 다이어그램
+
 | SVG | 문서 | 주제 |
 |---|---|---|
 | [01-layered-architecture](./svg/00-overview/01-layered-architecture.svg) | 00-overview/01 | Content → apps → packages → tools 4계층 |
@@ -111,6 +122,28 @@ analysis/
 | [11-byok-proxy](./svg/50-integration/11-byok-proxy.svg) | 50-integration/11 | BYOK 프록시 라우트 + SSRF 가드 |
 | [12-hmac-gate](./svg/50-integration/12-hmac-gate.svg) | 50-integration/12 | HMAC 데스크탑 인증 게이트 시퀀스 |
 | [13-skill-shadowing](./svg/20-content/13-skill-shadowing.svg) | 20-content/13 | listSkills 6단계 + shadowing 패턴 |
+| [14-harness-mapping](./svg/60-comparisons/14-harness-mapping.svg) | 60-comparisons/14 | Anthropic Planner/Generator/Evaluator ↔ OD 3-Turn/16-CLI/Critique Theater 매핑 |
+
+### 보조 다이어그램
+
+| SVG | 문서 | 주제 |
+|---|---|---|
+| [01b-deployment-forms](./svg/00-overview/01b-deployment-forms.svg) | 00-overview/01 §6 | 4가지 배포 형태 비교 |
+| [02b-daemon-internals](./svg/10-structure/02b-daemon-internals.svg) | 10-structure/02 §1 | 데몬 내부 모듈 맵 (routes/runtimes/prompts/data) |
+| [03b-stamp-and-ipc](./svg/10-structure/03b-stamp-and-ipc.svg) | 10-structure/03 §3 | 5-stamp 필드 + 8개 IPC 메시지 종류 |
+| [04b-pack-pipeline](./svg/10-structure/04b-pack-pipeline.svg) | 10-structure/04 §2 | tools-pack mac 7단계 빌드 파이프라인 |
+| [05b-frontmatter-schema](./svg/20-content/05b-frontmatter-schema.svg) | 20-content/05 §2-3 | SKILL.md frontmatter 스키마 |
+| [06b-boot-sequence](./svg/30-runtime/06b-boot-sequence.svg) | 30-runtime/06 §1 | pnpm tools-dev start 부트 시퀀스 |
+| [07b-child-lifecycle](./svg/30-runtime/07b-child-lifecycle.svg) | 30-runtime/07 §8 | 에이전트 자식 프로세스 상태 머신 |
+| [08b-direction-palettes](./svg/30-runtime/08b-direction-palettes.svg) | 30-runtime/08 §5 | 5개 방향 OKLch 팔레트 시각 비교 |
+| [08c-branch-decision](./svg/30-runtime/08c-branch-decision.svg) | 30-runtime/08 §3 | Turn 2 brand 분기 결정 트리 |
+| [09b-cancel-flow](./svg/30-runtime/09b-cancel-flow.svg) | 30-runtime/09 §11 | 취소/정리 흐름 (ACP abort → SIGTERM → SIGKILL) |
+| [10b-od-directory-tree](./svg/40-data/10b-od-directory-tree.svg) | 40-data/10 §6 | .od/ 디렉토리 트리 |
+| [11b-media-state-machine](./svg/50-integration/11b-media-state-machine.svg) | 50-integration/11 §10 | media_tasks 5-상태 머신 |
+| [12b-iframe-sandbox](./svg/50-integration/12b-iframe-sandbox.svg) | 50-integration/12 §3 | iframe 샌드박스 격리 + storage shim + postMessage |
+| [13b-skillinfo-fields](./svg/20-content/13b-skillinfo-fields.svg) | 20-content/13 §3 | SkillInfo 24개 필드 맵 |
+| [14b-shared-principles](./svg/60-comparisons/14b-shared-principles.svg) | 60-comparisons/14 §3 | 세 가지 공유 원칙과 두 시스템의 구현 |
+| [14c-evaluation-loops](./svg/60-comparisons/14c-evaluation-loops.svg) | 60-comparisons/14 §4 | 외부 evaluator vs 강제 단계 + 사용자 in-the-loop |
 
 ## 분석 방법
 

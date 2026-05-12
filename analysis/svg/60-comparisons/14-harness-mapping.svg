@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 720" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr14" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <marker id="arrBi" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1565c0"/>
+    </marker>
+    <style>
+      .box { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .a   { fill: #e3f2fd; }
+      .b   { fill: #e8f5e9; }
+      .c   { fill: #fff3e0; }
+      .d   { fill: #fce4ec; }
+      .hdr { fill: #263238; }
+      .hdrTxt { fill: #fff; font-weight: 700; }
+      .title { font-weight: 600; font-size: 14px; }
+      .small { font-size: 11px; fill: #555; }
+      .tiny  { font-size: 10px; fill: #777; }
+      .map   { stroke: #1565c0; stroke-width: 1.6; fill: none; stroke-dasharray: 6 4; marker-start: url(#arrBi); marker-end: url(#arrBi); }
+      .ctx   { stroke: #555; stroke-width: 1.2; fill: none; marker-end: url(#arr14); }
+      .mapLbl { fill: #1565c0; font-size: 11px; font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="540" y="32" text-anchor="middle" font-weight="700" font-size="18">Anthropic harness ↔ Open Design daemon — 역할 매핑</text>
+  <text x="540" y="54" text-anchor="middle" class="small">같은 원리, 다른 격자: LLM 호출 그래프 vs OS 프로세스 + 프롬프트 단계 + iframe</text>
+
+  <!-- Column headers -->
+  <rect class="hdr" x="40" y="80" width="460" height="36" rx="6"/>
+  <text class="hdrTxt" x="270" y="103" text-anchor="middle" font-size="14">Anthropic 글 — LLM 위의 메타 루프</text>
+
+  <rect class="hdr" x="580" y="80" width="460" height="36" rx="6"/>
+  <text class="hdrTxt" x="810" y="103" text-anchor="middle" font-size="14">Open Design — 데몬 안의 다층 격자</text>
+
+  <!-- Row 1: Planner -->
+  <rect class="box a" x="40" y="138" width="460" height="120"/>
+  <text class="title" x="60" y="162">Planner</text>
+  <text class="small" x="60" y="182">1–4문장 사용자 프롬프트 → 완전한 제품 스펙으로 확장</text>
+  <text class="small" x="60" y="200">AI 기능 통합 기회 발굴</text>
+  <text class="small" x="60" y="218">세부 구현보다 고수준 설계에 집중</text>
+  <text class="tiny"  x="60" y="240">출력: 핸드오프 아티팩트 (파일)</text>
+
+  <rect class="box b" x="580" y="138" width="460" height="120"/>
+  <text class="title" x="600" y="162">3-Turn 결정론적 폼 (apps/daemon/src/prompts/discovery.ts)</text>
+  <text class="small" x="600" y="182">Turn 1: &lt;question-form id="discovery"&gt; — time-to-first-byte</text>
+  <text class="small" x="600" y="200">Turn 2: brand 분기 — direction-cards 또는 brand-spec.md 추출</text>
+  <text class="small" x="600" y="218">Turn 3+: TodoWrite 9단계 + 라이브 진행</text>
+  <text class="tiny"  x="600" y="240">출력: SQLite messages + .od/projects/&lt;id&gt;/ 작업 트리</text>
+
+  <path class="map" d="M 502 198 L 578 198"/>
+  <text class="mapLbl" x="540" y="190" text-anchor="middle">동등 책임</text>
+
+  <!-- Row 2: Generator -->
+  <rect class="box b" x="40" y="280" width="460" height="120"/>
+  <text class="title" x="60" y="304">Generator</text>
+  <text class="small" x="60" y="324">스택: React + Vite + FastAPI + SQLite + Git</text>
+  <text class="small" x="60" y="342">한 번에 하나의 기능, 4.6에서는 연속적 빌드</text>
+  <text class="small" x="60" y="360">버전 관리로 iteration 보존</text>
+  <text class="tiny"  x="60" y="382">단일 Claude 모델 호출</text>
+
+  <rect class="box c" x="580" y="280" width="460" height="120"/>
+  <text class="title" x="600" y="304">16 CLI 어댑터 (apps/daemon/src/runtimes/)</text>
+  <text class="small" x="600" y="324">Claude · Codex · Gemini · Copilot · Pi · ACP 계열 …</text>
+  <text class="small" x="600" y="342">capability probe → buildArgs 조건부 플래그</text>
+  <text class="small" x="600" y="360">4종 stream parser → ChatSseEvent union 정규화</text>
+  <text class="tiny"  x="600" y="382">사용자가 BYOK으로 모델 선택</text>
+
+  <path class="map" d="M 502 340 L 578 340"/>
+  <text class="mapLbl" x="540" y="332" text-anchor="middle">동등 책임</text>
+
+  <!-- Row 3: Evaluator -->
+  <rect class="box c" x="40" y="422" width="460" height="140"/>
+  <text class="title" x="60" y="446">Evaluator</text>
+  <text class="small" x="60" y="466">Playwright MCP로 실행 중인 앱을 실제로 조작</text>
+  <text class="small" x="60" y="484">스프린트 계약 검증 → 구체 결함 발견</text>
+  <text class="small" x="60" y="502">Few-shot 캘리브레이션으로 평가자 선호 일치</text>
+  <text class="small" x="60" y="520">별도 에이전트 프로세스 (행위자/판단자 분리)</text>
+  <text class="tiny"  x="60" y="544">비용: 추가 LLM 호출, 시간</text>
+
+  <rect class="box d" x="580" y="422" width="460" height="140"/>
+  <text class="title" x="600" y="446">Critique Theater + iframe + e2e</text>
+  <text class="small" x="600" y="466">5-패널 프로토콜 (apps/daemon/src/prompts/panel.ts)</text>
+  <text class="small" x="600" y="484">checklist.md P0 강제 + 5차원 self-radar</text>
+  <text class="small" x="600" y="502">iframe srcdoc 샌드박스로 사용자가 직접 검증</text>
+  <text class="small" x="600" y="520">e2e: red spec → fix → green (AGENTS.md 워크플로)</text>
+  <text class="tiny"  x="600" y="544">비용: same-session 단계, Playwright는 앱 e2e용</text>
+
+  <path class="map" d="M 502 492 L 578 492"/>
+  <text class="mapLbl" x="540" y="484" text-anchor="middle">같은 목적</text>
+  <text class="mapLbl" x="540" y="510" text-anchor="middle">다른 격자</text>
+
+  <!-- Footer -->
+  <rect x="40" y="588" width="1000" height="112" rx="8" fill="#fafafa" stroke="#ccc"/>
+  <text class="title" x="60" y="612">핵심 비대칭</text>
+  <text class="small" x="60" y="632">· 글의 harness는 같은 모델의 여러 역할 호출. orchestrator는 Python (추정).</text>
+  <text class="small" x="60" y="650">· Open Design의 harness는 데몬 자체. (a) 어댑터 (b) 프롬프트 엔진 (c) SSE 정규화 (d) 샌드박스 권한 (e) 영속성 — 5 책임.</text>
+  <text class="small" x="60" y="668">· 글은 evaluator를 분리하여 비용↑ / 객체성↑. Open Design은 same-session 단계로 비용↓ / 거버넌스↓ — 같은 트레이드오프의 반대편.</text>
+  <text class="small" x="60" y="686">· 두 시스템 모두 파일이 핸드오프 매체. 글 = 핸드오프 아티팩트, OD = .od/projects/&lt;id&gt;/ + SQLite messages.</text>
+</svg>

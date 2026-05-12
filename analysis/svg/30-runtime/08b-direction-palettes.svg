@@ -1,0 +1,191 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 540" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <style>
+      .card { stroke: #333; stroke-width: 1.2; rx: 8; fill: #fff; }
+      .title { font-weight: 600; font-size: 13px; }
+      .small { font-size: 11px; fill: #555; }
+      .tiny  { font-size: 10px; fill: #777; }
+      .mono { font-family: ui-monospace, Menlo, monospace; font-size: 10px; }
+      .swatch { stroke: #999; stroke-width: 0.5; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="490" y="28" text-anchor="middle" font-weight="700" font-size="16">5개 큐레이션 방향 — OKLch 팔레트 비교</text>
+  <text x="490" y="48" text-anchor="middle" font-size="11" fill="#888">apps/daemon/src/prompts/directions.ts · 사용자가 카드 클릭 시 결정론적 :root 바인딩</text>
+
+  <!-- Direction 1: Editorial Monocle -->
+  <g transform="translate(20,75)">
+    <rect class="card" width="180" height="445"/>
+    <text class="title" x="90" y="22" text-anchor="middle">Editorial</text>
+    <text class="small" x="90" y="38" text-anchor="middle">Monocle / FT magazine</text>
+    <text class="tiny" x="90" y="55" text-anchor="middle">id: editorial-monocle</text>
+
+    <!-- swatches -->
+    <rect class="swatch" x="20" y="70" width="140" height="32" fill="oklch(98% 0.004 95)"/>
+    <text class="mono" x="90" y="91" text-anchor="middle">--bg  oklch(98% 0.004 95)</text>
+
+    <rect class="swatch" x="20" y="108" width="140" height="32" fill="oklch(100% 0.002 95)"/>
+    <text class="mono" x="90" y="129" text-anchor="middle">--surface</text>
+
+    <rect class="swatch" x="20" y="146" width="140" height="32" fill="oklch(20% 0.018 70)"/>
+    <text class="mono" x="90" y="167" text-anchor="middle" fill="#fff">--fg  oklch(20% 0.018 70)</text>
+
+    <rect class="swatch" x="20" y="184" width="140" height="32" fill="oklch(48% 0.012 70)"/>
+    <text class="mono" x="90" y="205" text-anchor="middle" fill="#fff">--muted</text>
+
+    <rect class="swatch" x="20" y="222" width="140" height="32" fill="oklch(90% 0.006 95)"/>
+    <text class="mono" x="90" y="243" text-anchor="middle">--border</text>
+
+    <rect class="swatch" x="20" y="260" width="140" height="32" fill="oklch(52% 0.10 28)"/>
+    <text class="mono" x="90" y="281" text-anchor="middle" fill="#fff">--accent  oklch(52% 0.10 28)</text>
+
+    <text class="tiny" x="90" y="320" text-anchor="middle">display: Iowan Old Style, serif</text>
+    <text class="tiny" x="90" y="335" text-anchor="middle">body: system sans</text>
+
+    <text class="small" x="20" y="365">posture:</text>
+    <text class="tiny" x="20" y="382">- no shadows, no rounded cards</text>
+    <text class="tiny" x="20" y="397">- borders + whitespace</text>
+    <text class="tiny" x="20" y="412">- serif display, sans body</text>
+    <text class="tiny" x="20" y="427">- mono kicker uppercase</text>
+  </g>
+
+  <!-- Direction 2: Modern Minimal -->
+  <g transform="translate(210,75)">
+    <rect class="card" width="180" height="445"/>
+    <text class="title" x="90" y="22" text-anchor="middle">Modern Minimal</text>
+    <text class="small" x="90" y="38" text-anchor="middle">Linear / Vercel</text>
+    <text class="tiny" x="90" y="55" text-anchor="middle">id: modern-minimal</text>
+
+    <rect class="swatch" x="20" y="70" width="140" height="32" fill="oklch(99% 0.002 240)"/>
+    <text class="mono" x="90" y="91" text-anchor="middle">--bg  oklch(99% 0.002 240)</text>
+
+    <rect class="swatch" x="20" y="108" width="140" height="32" fill="oklch(100% 0 0)"/>
+    <text class="mono" x="90" y="129" text-anchor="middle">--surface</text>
+
+    <rect class="swatch" x="20" y="146" width="140" height="32" fill="oklch(18% 0.012 250)"/>
+    <text class="mono" x="90" y="167" text-anchor="middle" fill="#fff">--fg  oklch(18% 0.012 250)</text>
+
+    <rect class="swatch" x="20" y="184" width="140" height="32" fill="oklch(54% 0.012 250)"/>
+    <text class="mono" x="90" y="205" text-anchor="middle" fill="#fff">--muted</text>
+
+    <rect class="swatch" x="20" y="222" width="140" height="32" fill="oklch(92% 0.005 250)"/>
+    <text class="mono" x="90" y="243" text-anchor="middle">--border</text>
+
+    <rect class="swatch" x="20" y="260" width="140" height="32" fill="oklch(58% 0.18 255)"/>
+    <text class="mono" x="90" y="281" text-anchor="middle" fill="#fff">--accent  cobalt</text>
+
+    <text class="tiny" x="90" y="320" text-anchor="middle">display: -apple-system / SF Pro</text>
+    <text class="tiny" x="90" y="335" text-anchor="middle">body: system sans</text>
+
+    <text class="small" x="20" y="365">posture:</text>
+    <text class="tiny" x="20" y="382">- tight letter-spacing (-0.02em)</text>
+    <text class="tiny" x="20" y="397">- hairline borders, no shadows</text>
+    <text class="tiny" x="20" y="412">- mono with tabular-nums</text>
+    <text class="tiny" x="20" y="427">- sticky frosted nav</text>
+  </g>
+
+  <!-- Direction 3: Human / Approachable -->
+  <g transform="translate(400,75)">
+    <rect class="card" width="180" height="445"/>
+    <text class="title" x="90" y="22" text-anchor="middle">Human / Approachable</text>
+    <text class="small" x="90" y="38" text-anchor="middle">Airbnb / Duolingo</text>
+    <text class="tiny" x="90" y="55" text-anchor="middle">id: human-approachable</text>
+
+    <rect class="swatch" x="20" y="70" width="140" height="32" fill="oklch(98% 0.004 240)"/>
+    <text class="mono" x="90" y="91" text-anchor="middle">--bg</text>
+
+    <rect class="swatch" x="20" y="108" width="140" height="32" fill="oklch(100% 0 0)"/>
+    <text class="mono" x="90" y="129" text-anchor="middle">--surface</text>
+
+    <rect class="swatch" x="20" y="146" width="140" height="32" fill="oklch(22% 0.018 240)"/>
+    <text class="mono" x="90" y="167" text-anchor="middle" fill="#fff">--fg</text>
+
+    <rect class="swatch" x="20" y="184" width="140" height="32" fill="oklch(50% 0.014 240)"/>
+    <text class="mono" x="90" y="205" text-anchor="middle" fill="#fff">--muted</text>
+
+    <rect class="swatch" x="20" y="222" width="140" height="32" fill="oklch(90% 0.006 240)"/>
+    <text class="mono" x="90" y="243" text-anchor="middle">--border</text>
+
+    <rect class="swatch" x="20" y="260" width="140" height="32" fill="oklch(56% 0.12 170)"/>
+    <text class="mono" x="90" y="281" text-anchor="middle" fill="#fff">--accent  brand teal</text>
+
+    <text class="tiny" x="90" y="320" text-anchor="middle">display: Söhne / Avenir Next</text>
+    <text class="tiny" x="90" y="335" text-anchor="middle">body: system sans</text>
+
+    <text class="small" x="20" y="365">posture:</text>
+    <text class="tiny" x="20" y="382">- sans display strong weight</text>
+    <text class="tiny" x="20" y="397">- radii 12–18px</text>
+    <text class="tiny" x="20" y="412">- primary + domain accent</text>
+    <text class="tiny" x="20" y="427">- subtle elevation on cards</text>
+  </g>
+
+  <!-- Direction 4: Tech / Utility -->
+  <g transform="translate(590,75)">
+    <rect class="card" width="180" height="445"/>
+    <text class="title" x="90" y="22" text-anchor="middle">Tech / Utility</text>
+    <text class="small" x="90" y="38" text-anchor="middle">Datadog / GitHub</text>
+    <text class="tiny" x="90" y="55" text-anchor="middle">id: tech-utility</text>
+
+    <rect class="swatch" x="20" y="70" width="140" height="32" fill="oklch(98% 0.004 220)"/>
+    <text class="mono" x="90" y="91" text-anchor="middle">--bg</text>
+
+    <rect class="swatch" x="20" y="108" width="140" height="32" fill="oklch(100% 0 0)"/>
+    <text class="mono" x="90" y="129" text-anchor="middle">--surface</text>
+
+    <rect class="swatch" x="20" y="146" width="140" height="32" fill="oklch(18% 0.012 220)"/>
+    <text class="mono" x="90" y="167" text-anchor="middle" fill="#fff">--fg</text>
+
+    <rect class="swatch" x="20" y="184" width="140" height="32" fill="oklch(54% 0.014 220)"/>
+    <text class="mono" x="90" y="205" text-anchor="middle" fill="#fff">--muted</text>
+
+    <rect class="swatch" x="20" y="222" width="140" height="32" fill="oklch(92% 0.005 220)"/>
+    <text class="mono" x="90" y="243" text-anchor="middle">--border</text>
+
+    <rect class="swatch" x="20" y="260" width="140" height="32" fill="oklch(58% 0.16 145)"/>
+    <text class="mono" x="90" y="281" text-anchor="middle" fill="#fff">--accent  signal green</text>
+
+    <text class="tiny" x="90" y="320" text-anchor="middle">display + body: Inter (single family)</text>
+    <text class="tiny" x="90" y="335" text-anchor="middle">mono: JetBrains Mono / Plex Mono</text>
+
+    <text class="small" x="20" y="365">posture:</text>
+    <text class="tiny" x="20" y="382">- tabular numerics everywhere</text>
+    <text class="tiny" x="20" y="397">- dense tables, hairline borders</text>
+    <text class="tiny" x="20" y="412">- no row striping</text>
+    <text class="tiny" x="20" y="427">- inline status pills</text>
+  </g>
+
+  <!-- Direction 5: Brutalist -->
+  <g transform="translate(780,75)">
+    <rect class="card" width="180" height="445"/>
+    <text class="title" x="90" y="22" text-anchor="middle">Brutalist</text>
+    <text class="small" x="90" y="38" text-anchor="middle">Are.na / Yale</text>
+    <text class="tiny" x="90" y="55" text-anchor="middle">id: brutalist-experimental</text>
+
+    <rect class="swatch" x="20" y="70" width="140" height="32" fill="oklch(98% 0.002 100)"/>
+    <text class="mono" x="90" y="91" text-anchor="middle">--bg</text>
+
+    <rect class="swatch" x="20" y="108" width="140" height="32" fill="oklch(100% 0 0)"/>
+    <text class="mono" x="90" y="129" text-anchor="middle">--surface</text>
+
+    <rect class="swatch" x="20" y="146" width="140" height="32" fill="oklch(15% 0.02 100)"/>
+    <text class="mono" x="90" y="167" text-anchor="middle" fill="#fff">--fg</text>
+
+    <rect class="swatch" x="20" y="184" width="140" height="32" fill="oklch(40% 0.018 100)"/>
+    <text class="mono" x="90" y="205" text-anchor="middle" fill="#fff">--muted</text>
+
+    <rect class="swatch" x="20" y="222" width="140" height="32" fill="oklch(15% 0.02 100)"/>
+    <text class="mono" x="90" y="243" text-anchor="middle" fill="#fff">--border  full-strength</text>
+
+    <rect class="swatch" x="20" y="260" width="140" height="32" fill="oklch(60% 0.22 25)"/>
+    <text class="mono" x="90" y="281" text-anchor="middle" fill="#fff">--accent  hot red</text>
+
+    <text class="tiny" x="90" y="320" text-anchor="middle">display: Times New Roman serif</text>
+    <text class="tiny" x="90" y="335" text-anchor="middle">body: monospace (deliberate)</text>
+
+    <text class="small" x="20" y="365">posture:</text>
+    <text class="tiny" x="20" y="382">- display serif at clamp(80px,12vw)</text>
+    <text class="tiny" x="20" y="397">- borders 1.5–2px, full strength</text>
+    <text class="tiny" x="20" y="412">- asymmetric 70/30 layouts</text>
+    <text class="tiny" x="20" y="427">- no radius, no shadows, no gradients</text>
+  </g>
+</svg>

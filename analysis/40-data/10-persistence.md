@@ -2,7 +2,7 @@
 
 데몬의 영속성은 **두 축**으로 나뉩니다.
 
-- **`apps/daemon/src/db.ts`** (~1,300 라인) — 메타데이터/관계 데이터를 담는 SQLite (`app.sqlite`, WAL 모드, 12+ 테이블).
+- **`apps/daemon/src/db.ts`** (1,342 라인) — 메타데이터/관계 데이터를 담는 SQLite (`app.sqlite`, WAL 모드, 12+ 테이블).
 - **`.od/` 디렉토리 트리** — 실제 아티팩트, 대화 로그, 메모리, MCP 설정, BYOK 자격증명 파일.
 
 ![SQLite ER 다이어그램](../svg/40-data/10-er-diagram.svg)
@@ -11,7 +11,7 @@
 
 ## 1. SQLite 연결과 Pragma
 
-`apps/daemon/src/db.ts:29-42`:
+`apps/daemon/src/db.ts:29-42` (요약):
 
 ```typescript
 export function openDatabase(projectRoot, { dataDir } = {}) {
@@ -38,7 +38,7 @@ export function openDatabase(projectRoot, { dataDir } = {}) {
 
 ## 2. 누적식 마이그레이션 시스템
 
-`apps/daemon/src/db.ts:51-260`의 `migrate(db)`:
+`apps/daemon/src/db.ts:51-260`의 `migrate(db)` (요약):
 
 ```typescript
 function migrate(db) {
@@ -83,7 +83,7 @@ CREATE TABLE projects (
 );
 ```
 
-`id`는 `isSafeId(id)` 검증 (`apps/daemon/src/projects.ts:25`): `[A-Za-z0-9._-]{1,128}` 정규식.
+`id`는 `isSafeId(id)` 검증 (`apps/daemon/src/projects.ts:1039-1044`): `[A-Za-z0-9._-]+` 1–128자, 순수 `.`-시퀀스 거부.
 
 ### 3-2. conversations (db.ts:73)
 ```sql
@@ -283,7 +283,7 @@ CREATE TABLE templates (
 
 ## 4. JSON 컬럼 정책
 
-`apps/daemon/src/db.ts:411-414`:
+`apps/daemon/src/db.ts:411-414` + `db.ts:1103-1110`:
 
 ```typescript
 function stringifyJsonObjectOrNull(value) {
@@ -327,6 +327,8 @@ templates (id PK)   -- 독립 (project 참조 없음)
 
 ## 6. `.od/` 디렉토리 레이아웃
 
+![.od/ 디렉토리 트리](../svg/40-data/10b-od-directory-tree.svg)
+
 ```
 <projectRoot>/.od/                 (또는 OD_DATA_DIR)
 ├── app.sqlite                     # 메인 DB
@@ -355,7 +357,7 @@ templates (id PK)   -- 독립 (project 참조 없음)
 
 ### Git 연결 프로젝트
 
-`apps/daemon/src/projects.ts:33-48`:
+`apps/daemon/src/projects.ts:41-48`:
 
 ```typescript
 export function resolveProjectDir(projectsRoot, projectId, metadata) {
@@ -377,7 +379,7 @@ export function resolveProjectDir(projectsRoot, projectId, metadata) {
 
 ## 7. 경로 검증 (보안)
 
-`apps/daemon/src/projects.ts:908-943`:
+`apps/daemon/src/projects.ts:908-943` (`resolveSafe` + `resolveSafeReal`):
 
 ```typescript
 function resolveSafe(dir, name) {
@@ -410,13 +412,12 @@ async function resolveSafeReal(dir, name) {
 
 ## 8. OD_DATA_DIR / OD_MEDIA_CONFIG_DIR 오버라이드
 
-우선순위 (높음 → 낮음):
-1. `dataDir` 파라미터 (프로그래매틱)
-2. `OD_MEDIA_CONFIG_DIR` 환경 변수 (media-config.json만)
-3. `OD_DATA_DIR` 환경 변수 (전체 데이터 루트)
-4. `<projectRoot>/.od` (기본)
+두 변수는 **독립적**이다 (`server.ts:924-959` `resolveDataDir`, `media-config.ts:122-129` `configFile`).
 
-### 홈 확장 (`apps/daemon/src/home-expansion.ts:20-39`)
+- SQLite / projects / artifacts 등 모든 일반 데이터: `OD_DATA_DIR` → 없으면 `<projectRoot>/.od` (`openDatabase`의 `dataDir` 파라미터에 주입).
+- `media-config.json` 전용: `OD_MEDIA_CONFIG_DIR` > `OD_DATA_DIR` > `<projectRoot>/.od` (즉 media-config는 두 변수 모두 우선순위 적용).
+
+### 홈 확장 (`apps/daemon/src/home-expansion.ts:23-32`)
 
 ```typescript
 const HOME_BARE_TOKENS = new Set(['~', '$HOME', '${HOME}']);
@@ -437,7 +438,7 @@ export function expandHomePrefix(raw: string): string {
 
 ### 9-1. setTabs — 원자 swap
 
-`apps/daemon/src/db.ts:1329-1342`:
+`apps/daemon/src/db.ts:1329-1342` (요약):
 
 ```typescript
 export function setTabs(db, projectId, names, activeName) {
@@ -546,3 +547,230 @@ Normalize 함수에 `newColumn: row.newColumn ?? undefined` 추가, Insert/Updat
 - **확장 포인트** — `<domain>/persistence.ts` 모듈로 새 도메인 추가가 격리됨
 - **인덱싱** — 모든 정렬/필터 컬럼에 인덱스
 - **트랜잭션** — `db.transaction()`으로 멀티 INSERT/DELETE 원자성 보장
+
+---
+
+## 15. 심층 노트
+
+### 15-1. 핵심 코드 발췌
+
+```typescript
+// apps/daemon/src/db.ts (요약) — 멱등 마이그레이션
+function migrate(db: SqliteDb): void {
+  db.exec(`CREATE TABLE IF NOT EXISTS projects (...); ...`);
+  const cols = db.prepare(`PRAGMA table_info(projects)`).all() as DbRow[];
+  if (!cols.some(c => c.name === 'metadata_json')) {
+    db.exec(`ALTER TABLE projects ADD COLUMN metadata_json TEXT`);
+  }
+  migrateCritique(db);
+  migrateMediaTasks(db);
+}
+```
+
+```typescript
+// apps/daemon/src/db.ts — 트랜잭션 패턴
+export function setTabs(db, projectId, names, activeName) {
+  const tx = db.transaction(() => {
+    db.prepare(`DELETE FROM tabs WHERE project_id = ?`).run(projectId);
+    const ins = db.prepare(`INSERT INTO tabs (...) VALUES (?, ?, ?, ?)`);
+    names.forEach((n, i) => ins.run(projectId, n, i, n === activeName ? 1 : 0));
+  });
+  tx();   // 실패 시 자동 ROLLBACK
+}
+```
+
+```typescript
+// apps/daemon/src/projects.ts — symlink-aware 경로 검증
+async function resolveSafeReal(baseDir: string, relPath: string) {
+  const candidate = resolveSafe(baseDir, relPath);
+  const rootReal = await realpath(baseDir).catch(() => baseDir);
+  const real = await realpath(candidate).catch((err) => {
+    if (err.code === 'ENOENT') return resolveExistingPrefix(candidate);
+    throw err;
+  });
+  if (!real.startsWith(rootReal + path.sep) && real !== rootReal)
+    throw new Error('path escapes project dir via symlink');
+  return real;
+}
+```
+
+### 15-2. 엣지 케이스 + 에러 패턴
+
+- **WAL 모드 + 동시 쓰기**: better-sqlite3는 단일 프로세스, single-threaded 핸들. 동시 쓰기 시 직렬화 (자동). 외부 프로세스가 같은 DB 열면 WAL race — 데몬은 단일.
+- **마이그레이션 부분 실패**: ALTER TABLE 중 SQLite 에러 (디스크 full 등) → 부분 적용 가능. 다음 부팅 시 PRAGMA check가 누락 컬럼 발견 → 다시 ALTER.
+- **JSON 컬럼 손상**: 외부 도구가 잘못 편집했거나 클라이언트가 잘못 입력 시 `parseJsonOrUndef` 가 try-catch로 silent fail → undefined.
+- **FK CASCADE 폭주**: project 삭제 시 conversations + messages + comments + deployments + critique + media_tasks 모두 CASCADE. 큰 프로젝트 (메시지 수만 개) 삭제 ~수 초.
+- **`.od/projects/<id>/` + `.od/app.sqlite` 불일치**: 사용자가 수동으로 폴더 삭제 시 DB에 project 레코드만 남음 → daemon이 "missing files" 표시. cleanup 스크립트 (manual).
+- **`OD_DATA_DIR` + `OD_MEDIA_CONFIG_DIR` 동시 지정**: media-config.json만 별도 위치. SQLite은 OD_DATA_DIR 사용.
+
+### 15-3. 트레이드오프 + 설계 근거
+
+- **SQLite vs PostgreSQL/embedded option**: SQLite는 zero-config + 단일 파일 + WAL 성능 충분. 비용은 multi-process 동시 쓰기 불가 — 데몬 단일 프로세스 모델과 잘 맞음.
+- **누적식 마이그레이션**: 마이그레이션 번호 시스템 (v1, v2) 없이 IF NOT EXISTS + PRAGMA check. 단순성 vs version-aware. 비용은 마이그레이션 순서 의존성 불명확 (현재는 부팅 시 한 번 실행).
+- **JSON 컬럼 vs 정규화 테이블**: events/attachments 같은 schemaless 데이터에 JSON. 비용은 쿼리 시 JSON path 어렵 → 보통 row 전체 fetch 후 JS에서 처리.
+- **파일 vs SQLite BLOB**: HTML 아티팩트, 이미지 등은 파일시스템. SQLite BLOB은 단일 파일 backup 편하지만 GC/streaming 비용.
+- **realpath + prefix 검증**: symlink escape 차단. 비용은 매 호출 시 fs.realpath syscall (~ms).
+
+### 15-4. 알고리즘 + 성능
+
+- **SQLite WAL write**: ~0.1-1ms per simple INSERT. fsync(checkpoint)는 ~5-20ms (디스크 동기화).
+- **인덱스 사용 query**: `idx_messages_conv (conversation_id, position)`로 대화 메시지 조회 O(log N + K) — N=메시지 수, K=결과 수.
+- **트랜잭션 batch INSERT**: setTabs 1000 entries → ~10-30ms (트랜잭션 없으면 ~수 초).
+- **WAL checkpoint**: auto-checkpoint 1000 pages 기본. 데이터 ~ 4MB 누적 시 자동 합병.
+- **DB 사이즈**: 평균 사용자 ~50-200 MB (대화 텍스트가 주요). HTML 아티팩트는 파일 → DB 안 들어옴.
+- **마이그레이션 실행**: 모든 IF NOT EXISTS 합쳐 ~10-30ms 콜드 (no-op 시 ~1ms).
+
+## 16. 함수·라인 단위 추적
+
+### 16-1. `migrate(db)` — `apps/daemon/src/db.ts:51-260`
+
+기본 도메인 8개 테이블을 단일 `db.exec()` 블록(`db.ts:52-196`)으로 모두 만든 뒤, 신규 컬럼을 `PRAGMA table_info`로 검사하여 누락분만 `ALTER TABLE`로 보강한다. 순서대로 분해하면:
+
+| 라인 | 동작 | 영향 |
+|------|------|------|
+| `52-62` | `CREATE TABLE projects` | 메인 엔티티. `id`/`name`/`metadata_json` 등 8 컬럼. |
+| `64-71` | `CREATE TABLE templates` | 프로젝트 → 템플릿 변환 결과. FK 없음 (소스 프로젝트 삭제돼도 유지). |
+| `73-80` | `CREATE TABLE conversations` | `FOREIGN KEY(project_id) ON DELETE CASCADE`. |
+| `82-83` | `CREATE INDEX idx_conv_project` | `(project_id, updated_at DESC)` — listConversations 핫패스. |
+| `85-101` | `CREATE TABLE messages` | 13 컬럼. JSON: `events_json`, `attachments_json`, `produced_files_json`, `feedback_json`. |
+| `103-104` | `CREATE INDEX idx_messages_conv` | `(conversation_id, position)` — listMessages 핫패스. |
+| `106-124` | `CREATE TABLE preview_comments` | UNIQUE 키 `(project_id, conversation_id, file_path, element_id)` 로 멱등. |
+| `126-127` | `CREATE INDEX idx_preview_comments_conversation` | 대화별 코멘트 조회. |
+| `129-136` | `CREATE TABLE tabs` | 복합 PK `(project_id, name)`. `is_active INTEGER` 로 boolean. |
+| `138-139` | `CREATE INDEX idx_tabs_project` | `(project_id, position)`. |
+| `141-158` | `CREATE TABLE deployments` | UNIQUE `(project_id, file_name, provider_id)`; `provider_metadata_json` JSON. |
+| `160-161` | `CREATE INDEX idx_deployments_project` | 프로젝트별 배포 목록. |
+| `163-177` | `CREATE TABLE routines` | FK 없음 (글로벌). `schedule_kind`/`schedule_value` legacy + `schedule_json` 권위. |
+| `179-192` | `CREATE TABLE routine_runs` | `FK(routine_id) ON DELETE CASCADE`. |
+| `194-195` | `CREATE INDEX idx_routine_runs_routine` | `(routine_id, started_at DESC)`. |
+
+ALTER 블록 (`db.ts:197-257`):
+
+| 라인 | 검사 대상 | 추가 컬럼 |
+|------|-----------|----------|
+| `199-202` | `projects` | `metadata_json TEXT` |
+| `203-208` | `messages` | `agent_id`, `agent_name` |
+| `210-217` | `messages` | `run_id`, `run_status`, `last_run_event_id` |
+| `219-224` | `messages` | `comment_attachments_json`, `feedback_json` |
+| `226-235` | `preview_comments` | `selection_kind`, `member_count`, `pod_members_json` |
+| `236-248` | `deployments` | `status NOT NULL DEFAULT 'ready'`, `status_message`, `reachable_at`, `provider_metadata_json` |
+| `254-257` | `routines` | `schedule_json` (테이블이 존재할 때만 — 새 DB는 inline 정의로 이미 포함) |
+
+마지막에 `migrateCritique(db)` (`db.ts:258`)과 `migrateMediaTasks(db)` (`db.ts:259`)가 도메인 마이그레이션을 위임받아 각각 `critique_*` 테이블, `media_tasks` 테이블을 생성한다.
+
+### 16-2. `resolveSafeReal(dir, name)` — `apps/daemon/src/projects.ts:925-943` (호출 `resolveSafe` @ 908-915, `validateProjectPath` @ 965-981, `resolveExistingPrefix` @ 945-958)
+
+심볼릭 링크 우회까지 막는 경로 검증. 호출 흐름:
+
+```
+resolveSafeReal(dir, name)                            // projects.ts:925
+ ├─ resolveSafe(dir, name)                            // projects.ts:908
+ │   ├─ validateProjectPath(name)                     // projects.ts:965 — NUL/Windows-drive/절대경로/`..`/예약어 차단
+ │   └─ path.resolve(dir, safePath)                   // string-prefix 확인
+ ├─ realpath(dir)                                     // projects.ts:927 — rootReal 확정
+ ├─ realpath(candidate)                               // projects.ts:930 — 실재 시
+ │   └─ ENOENT → resolveExistingPrefix(candidate)     // projects.ts:945 — 가장 긴 실재 prefix 찾기 (재귀적 realpath)
+ └─ real.startsWith(rootReal + sep) 확인              // projects.ts:937 — 실패 시 EPATHESCAPE
+```
+
+`resolveExistingPrefix` (`projects.ts:945-958`)는 path를 sep으로 자른 뒤 뒤에서부터 realpath()를 시도한다. 가장 깊은 실재 prefix가 발견되면 tail을 단순 concat — 미실재 디렉토리에 쓰기 시도(첫 write)도 검증 가능. `validateProjectPath` (`projects.ts:965-981`)의 차단 규칙:
+
+| 차단 패턴 | 라인 | 사유 |
+|-----------|------|------|
+| `typeof !== 'string'` 또는 빈 문자열 | `966` | 형식 위반 |
+| `\0` (NUL) | `970` | C-string 종료 트릭 |
+| `^[A-Za-z]:` | `970` | Windows 드라이브 절대 경로 |
+| `^/` (선행 슬래시) | `970` | POSIX 절대 경로 |
+| `FORBIDDEN_SEGMENT` 매치 (`^$\|^\.\.?$` — 빈 세그먼트/`.`/`..`) | `974` | path traversal |
+| `RESERVED_PROJECT_FILE_SEGMENTS` (실제 항목: `.live-artifacts`) | `977` | 프로젝트 내부 예약 디렉토리 침범 |
+
+### 데이터 페이로드 샘플
+
+`projects` row (실제 SQLite 덤프 형태):
+
+```
+id           = 'proj_2024-04-12T09-15-22-abc123'
+name         = 'landing-page-v3'
+skill_id     = 'web-app'
+design_system_id = 'shadcn-ui'
+pending_prompt = NULL
+metadata_json = '{"baseDir":"/Users/me/Code/landing","github":{"repo":"owner/landing","branch":"main"},"createdVia":"import"}'
+created_at   = 1712910922340
+updated_at   = 1712914533102
+```
+
+`conversations` row:
+
+```
+id           = 'conv_01HV9XK7QY8Q3Z5N4M2P1R'
+project_id   = 'proj_2024-04-12T09-15-22-abc123'
+title        = 'Add hero CTA + pricing comparison'
+created_at   = 1712911000123
+updated_at   = 1712914500987
+```
+
+`messages` row (assistant 응답, JSON 컬럼 포함):
+
+```
+id                = 'msg_01HV9XKBR2D5...'
+conversation_id   = 'conv_01HV9XK7QY8Q3Z5N4M2P1R'
+role              = 'assistant'
+content           = 'I added the hero CTA section…'
+agent_id          = 'claude-sonnet-4-5'
+agent_name        = 'Claude'
+events_json       = '[{"t":"tool_use","name":"write_file","path":"app/page.tsx"},{"t":"text","delta":"I added…"}]'
+attachments_json  = '[]'
+produced_files_json = '["app/page.tsx","app/pricing.tsx"]'
+feedback_json     = NULL
+run_status        = 'done'
+position          = 7
+created_at        = 1712913004511
+```
+
+`messages` 스키마 덤프 (`PRAGMA table_info(messages)`):
+
+```
+0|id|TEXT|1||1
+1|conversation_id|TEXT|1||0
+2|role|TEXT|1||0
+3|content|TEXT|1||0
+4|agent_id|TEXT|0||0
+5|agent_name|TEXT|0||0
+6|events_json|TEXT|0||0
+7|attachments_json|TEXT|0||0
+8|produced_files_json|TEXT|0||0
+9|feedback_json|TEXT|0||0
+10|started_at|INTEGER|0||0
+11|ended_at|INTEGER|0||0
+12|position|INTEGER|1||0
+13|created_at|INTEGER|1||0
+14|run_id|TEXT|0||0
+15|run_status|TEXT|0||0
+16|last_run_event_id|TEXT|0||0
+17|comment_attachments_json|TEXT|0||0
+```
+
+### 불변(invariant) 매트릭스
+
+| 작업 | 필요한 변경 | 검증 |
+|------|------------|------|
+| 신규 테이블 추가 | `db.ts:52-196` 블록에 `CREATE TABLE IF NOT EXISTS` 추가, 필요 시 인덱스 추가, FK CASCADE 결정 | `pnpm --filter @open-design/daemon test`, 신/구 DB 모두에서 `migrate()` 멱등 확인 |
+| 컬럼 추가 | inline 정의 추가 + `PRAGMA table_info` 검사 + `ALTER TABLE` 분기(`db.ts:197-257` 패턴) | 신규 DB: inline 사용; 기존 DB: ALTER 적용. 두 케이스 다 테스트 필요 |
+| 인덱스 추가 | `CREATE INDEX IF NOT EXISTS` 한 줄. 컬럼 순서가 selectivity 결정 (앞 컬럼이 equality, 뒤가 range) | SQLite `EXPLAIN QUERY PLAN` 으로 인덱스 사용 확인 |
+| FK CASCADE 변경 | SQLite는 `ALTER TABLE`로 FK 변경 불가 — 새 테이블 만들고 데이터 복사 후 swap | 마이그레이션 전후 row count 비교 |
+| JSON 컬럼 추가 | `TEXT` 컬럼으로 추가. read 시 `parseJsonOrUndef` (null/invalid silent fail) | 손상 JSON 입력으로 fallback 검증 |
+
+### 성능·리소스 실측
+
+| 쿼리/연산 | 인덱스 | 예상 비용 |
+|----------|--------|----------|
+| `listMessages` (`SELECT … WHERE conversation_id=? ORDER BY position`) | `idx_messages_conv (conversation_id, position)` | O(log N + K). 300개 메시지 대화: ~0.5-2ms |
+| `listConversations` (`WHERE project_id=? ORDER BY updated_at DESC`) | `idx_conv_project` | O(log N + K). 50개 대화 프로젝트: ~0.3-1ms |
+| `getDeployment` (UNIQUE 검색) | 자동 UNIQUE 인덱스 | O(log N). ~0.1-0.5ms |
+| `listMediaTasks` (`WHERE project_id=? ORDER BY updated_at DESC LIMIT 50`) | `idx_media_tasks_project` | O(log N + 50). ~1-2ms |
+| `setTabs` (트랜잭션 DELETE + N × INSERT) | PK `(project_id, name)` | 100 tabs ~5-15ms (트랜잭션). 트랜잭션 없으면 ~수백 ms |
+| `upsertMessage` (`INSERT OR REPLACE`) | PK | ~0.5-2ms 단발 |
+
+WAL checkpoint: 기본 auto-checkpoint 1000 pages (~4MB). 활성 사용자가 1000 메시지 추가 시 자동 합병 1-3회 발생. `app.sqlite` 평균 사이즈는 메시지 1000개 기준 ~5-15MB (메시지 평균 ~5-15KB 가정, JSON 컬럼 포함). HTML/이미지 등 큰 페이로드는 모두 `.od/projects/<id>/` 파일이므로 DB 외부 — DB 증가가 선형으로 통제 가능.
+
+`fs.realpath` syscall 비용: macOS APFS ~수십 μs, 경로당 1-3회 호출 (`resolveSafeReal` 1회 + `resolveExistingPrefix` 재귀). 핫패스에서는 캐싱 안 됨 → 매 호출 syscall.

@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 660" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <style>
+      .box { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .ident { fill: #e3f2fd; }
+      .class { fill: #fff3e0; }
+      .display { fill: #fce4ec; }
+      .inject { fill: #e8f5e9; }
+      .derived { fill: #f3e5f5; }
+      .meta { fill: #f5f5f5; }
+      .title { font-weight: 600; font-size: 14px; }
+      .small { font-size: 11px; fill: #555; }
+      .mono { font-family: ui-monospace, Menlo, monospace; font-size: 11px; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="460" y="28" text-anchor="middle" font-weight="700" font-size="16">SkillInfo — 24 필드 맵</text>
+
+  <!-- ID & 신원 -->
+  <rect class="box ident" x="40" y="55" width="420" height="120"/>
+  <text class="title" x="55" y="78">신원 + 매칭</text>
+  <text class="mono" x="55" y="100">id</text>
+  <text class="small" x="155" y="100">string — frontmatter.name ?? 폴더명</text>
+  <text class="mono" x="55" y="118">name</text>
+  <text class="small" x="155" y="118">string — 표시명 (id와 동일)</text>
+  <text class="mono" x="55" y="136">description</text>
+  <text class="small" x="155" y="136">string — UI 카드 요약</text>
+  <text class="mono" x="55" y="154">triggers</text>
+  <text class="small" x="155" y="154">string[] — 정렬된 트리거 문구</text>
+
+  <!-- 분류 -->
+  <rect class="box class" x="475" y="55" width="405" height="240"/>
+  <text class="title" x="490" y="78">분류 (정규화 함수 적용)</text>
+  <text class="mono" x="490" y="100">mode</text>
+  <text class="small" x="590" y="100">prototype | deck | image | video | ...</text>
+  <text class="mono" x="490" y="118">surface</text>
+  <text class="small" x="590" y="118">web | image | video | audio</text>
+  <text class="mono" x="490" y="136">source</text>
+  <text class="small" x="590" y="136">"user" | "built-in" — 첫 루트 = user</text>
+  <text class="mono" x="490" y="154">platform</text>
+  <text class="small" x="590" y="154">desktop | mobile | null</text>
+  <text class="mono" x="490" y="172">scenario</text>
+  <text class="small" x="590" y="172">design/marketing/engineering/... 기본 "general"</text>
+  <text class="mono" x="490" y="190">category</text>
+  <text class="small" x="590" y="190">[a-z0-9-]+ 필터 슬러그 | null</text>
+  <text class="mono" x="490" y="208">fidelity</text>
+  <text class="small" x="590" y="208">wireframe | high-fidelity | null</text>
+  <text class="mono" x="490" y="226">craftRequires</text>
+  <text class="small" x="650" y="226">string[] — 정렬·dedupe된 슬러그</text>
+  <text class="mono" x="490" y="244">designSystemRequired</text>
+  <text class="small" x="700" y="244">boolean (기본 true)</text>
+  <text class="mono" x="490" y="262">defaultFor</text>
+  <text class="small" x="615" y="262">string[] — 기본 선택될 surface</text>
+  <text class="mono" x="490" y="280">previewType</text>
+  <text class="small" x="625" y="280">string (기본 "html")</text>
+
+  <!-- Display / 광고 -->
+  <rect class="box display" x="40" y="195" width="420" height="135"/>
+  <text class="title" x="55" y="218">광고 + 표시</text>
+  <text class="mono" x="55" y="240">upstream</text>
+  <text class="small" x="155" y="240">string? — 외부 출처 URL</text>
+  <text class="mono" x="55" y="258">featured</text>
+  <text class="small" x="155" y="258">number? — 매거진 row 우선순위 (낮을수록 상단)</text>
+  <text class="mono" x="55" y="276">speakerNotes</text>
+  <text class="small" x="175" y="276">boolean?|string? — deck 힌트</text>
+  <text class="mono" x="55" y="294">animations</text>
+  <text class="small" x="170" y="294">boolean?|string? — deck 힌트</text>
+  <text class="mono" x="55" y="312">examplePrompt</text>
+  <text class="small" x="185" y="312">string? — "Use this prompt" 버튼</text>
+
+  <!-- Derived examples -->
+  <rect class="box derived" x="40" y="350" width="420" height="105"/>
+  <text class="title" x="55" y="372">파생 카드 (examples/*.html)</text>
+  <text class="mono" x="55" y="394">aggregatesExamples</text>
+  <text class="small" x="225" y="394">boolean — 부모만 true</text>
+  <text class="small" x="55" y="412">파생 카드의 id 형식: &lt;parent&gt;:&lt;k&gt;</text>
+  <text class="small" x="55" y="428">  - 부모: mode/scenario/body 상속</text>
+  <text class="small" x="55" y="444">  - 파생: featured=null, aggregatesExamples=false</text>
+
+  <!-- Body + dir (메타) -->
+  <rect class="box meta" x="475" y="315" width="405" height="140"/>
+  <text class="title" x="490" y="338">본문 + 디스크</text>
+  <text class="mono" x="490" y="360">body</text>
+  <text class="small" x="555" y="360">string — frontmatter 후 본문</text>
+  <text class="small" x="490" y="378" font-style="italic">(부수 파일 있으면 withSkillRootPreamble 자동 inject)</text>
+  <text class="mono" x="490" y="402">dir</text>
+  <text class="small" x="555" y="402">string — 절대 경로</text>
+  <text class="small" x="490" y="420" font-style="italic">USER_SKILLS_DIR 또는 BUILTIN_SKILLS_DIR 하위</text>
+  <text class="small" x="490" y="440">동일 ID가 양쪽에 있으면 USER 루트가 우선 → shadow</text>
+
+  <!-- Bottom: count summary -->
+  <rect class="box" x="40" y="475" width="840" height="160"/>
+  <text class="title" x="55" y="498">정규화 함수 요약 (apps/daemon/src/skills.ts)</text>
+  <text class="small" x="55" y="520">normalizeMode      — 명시 값 또는 본문/description grep으로 추론 (영어 + 한자 키워드)</text>
+  <text class="small" x="55" y="538">normalizeSurface   — mode와 충돌 시 폴백</text>
+  <text class="small" x="55" y="556">normalizePlatform  — 모바일/데스크탑 태그 검증</text>
+  <text class="small" x="55" y="574">normalizeScenario  — finance/marketing/... 키워드 추론</text>
+  <text class="small" x="55" y="592">normalizeCategory  — 정규식 검증, 실패 시 null</text>
+  <text class="small" x="55" y="610">normalizeCraftRequires — 슬러그 trim/lowercase/정렬/dedupe</text>
+  <text class="small" x="55" y="628">normalizeTriggers  — 문자열 배열 정렬</text>
+</svg>

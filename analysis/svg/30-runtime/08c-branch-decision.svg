@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <style>
+      .box { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .turn1 { fill: #fce4ec; }
+      .decision { fill: #fff3e0; }
+      .branchA { fill: #e3f2fd; }
+      .branchB { fill: #e8f5e9; }
+      .branchC { fill: #f5f5f5; }
+      .turn3 { fill: #f3e5f5; }
+      .arrow { stroke: #555; stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+      .title { font-weight: 600; font-size: 14px; }
+      .small { font-size: 11px; fill: #555; }
+      .tiny { font-size: 10px; fill: #777; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="450" y="28" text-anchor="middle" font-weight="700" font-size="16">Turn 2 분기 결정 트리 (RULE 2)</text>
+
+  <!-- Turn 1 -->
+  <rect class="box turn1" x="320" y="55" width="260" height="80"/>
+  <text class="title" x="450" y="80" text-anchor="middle">Turn 1: discovery 폼 응답</text>
+  <text class="small" x="450" y="100" text-anchor="middle">사용자가 7개 이하 질문에 답</text>
+  <text class="small" x="450" y="116" text-anchor="middle">output · platform · audience · tone · brand · scale</text>
+
+  <!-- Decision -->
+  <rect class="box decision" x="320" y="170" width="260" height="60"/>
+  <text class="title" x="450" y="195" text-anchor="middle">brand 필드 값?</text>
+  <text class="small" x="450" y="215" text-anchor="middle">3분기 결정 포인트</text>
+
+  <!-- Branch A -->
+  <rect class="box branchA" x="40" y="265" width="260" height="160"/>
+  <text class="title" x="170" y="290" text-anchor="middle">A. "Pick a direction for me"</text>
+  <text class="small" x="55" y="315">→ &lt;question-form id="direction"&gt; emit</text>
+  <text class="small" x="55" y="333">→ 5개 큐레이션 카드 (direction-cards 타입)</text>
+  <text class="small" x="55" y="351">→ 사용자가 1개 선택 → 팔레트 결정</text>
+  <text class="small" x="55" y="369">→ renderDirectionSpecBlock()이</text>
+  <text class="small" x="55" y="385">  OKLch 변수 + 폰트를 system prompt에 inject</text>
+  <text class="small" x="55" y="403">→ model freestyle 배제</text>
+  <text class="tiny" x="55" y="420" font-style="italic">no TodoWrite yet</text>
+
+  <!-- Branch B -->
+  <rect class="box branchB" x="320" y="265" width="260" height="220"/>
+  <text class="title" x="450" y="290" text-anchor="middle">B. 브랜드 스펙 / 레퍼런스</text>
+  <text class="small" x="335" y="315">huashu-design 5단계 자산 추출:</text>
+  <text class="small" x="335" y="333">1. Locate the source (파일 또는 WebFetch)</text>
+  <text class="small" x="335" y="351">2. Download styling artifacts (CSS, PDF, SS)</text>
+  <text class="small" x="335" y="369">3. Extract real values (grep hex, eyeball type)</text>
+  <text class="small" x="335" y="387">4. Codify → brand-spec.md:</text>
+  <text class="tiny" x="355" y="402">- 6 color tokens in OKLch</text>
+  <text class="tiny" x="355" y="416">- Display + body + mono font stacks</text>
+  <text class="tiny" x="355" y="430">- 3–5 layout posture rules</text>
+  <text class="small" x="335" y="450">5. Vocalise — 한 문장 시스템 요약</text>
+  <text class="tiny" x="335" y="468" font-style="italic">Bash / Read / WebFetch tools 활용</text>
+
+  <!-- Branch C -->
+  <rect class="box branchC" x="600" y="265" width="260" height="160"/>
+  <text class="title" x="730" y="290" text-anchor="middle">C. 기타</text>
+  <text class="small" x="615" y="315">brand가 위 2개 옵션 미해당</text>
+  <text class="small" x="615" y="333">또는 brand 필드 자체가 명확</text>
+  <text class="small" x="615" y="351">(예: 사용자가 단순 prototype 요청)</text>
+  <text class="small" x="615" y="380">→ Turn 2 form 또는 추출 단계 스킵</text>
+  <text class="small" x="615" y="398">→ 바로 RULE 3 (TodoWrite)</text>
+
+  <!-- Converge to Turn 3 -->
+  <rect class="box turn3" x="280" y="510" width="340" height="0"/>
+  <rect class="box turn3" x="280" y="510" width="340" height="40"/>
+  <text class="title" x="450" y="535" text-anchor="middle">Turn 3+ : RULE 3 — TodoWrite 9단계 플랜</text>
+
+  <!-- Arrows -->
+  <path class="arrow" d="M 450 135 L 450 170"/>
+  <path class="arrow" d="M 380 230 L 170 265"/>
+  <path class="arrow" d="M 450 230 L 450 265"/>
+  <path class="arrow" d="M 520 230 L 730 265"/>
+
+  <path class="arrow" d="M 170 425 L 350 510"/>
+  <path class="arrow" d="M 450 485 L 450 510"/>
+  <path class="arrow" d="M 730 425 L 550 510"/>
+</svg>

@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 640" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <style>
+      .box { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .sqlite { fill: #fff3e0; }
+      .project { fill: #e3f2fd; }
+      .catalog { fill: #e8f5e9; }
+      .creds { fill: #fce4ec; }
+      .mono { font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+      .small { font-size: 11px; fill: #555; }
+      .tiny { font-size: 10px; fill: #777; }
+      .title { font-weight: 600; font-size: 14px; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="460" y="28" text-anchor="middle" font-weight="700" font-size="16">.od/ 디렉토리 — 데몬 영속성 트리</text>
+
+  <!-- Root -->
+  <text class="mono" x="40" y="60" font-weight="700">&lt;projectRoot or OD_DATA_DIR&gt;/.od/</text>
+
+  <!-- SQLite block -->
+  <rect class="box sqlite" x="60" y="80" width="820" height="90"/>
+  <text class="title" x="75" y="105">메타데이터 (SQLite, WAL 모드)</text>
+  <text class="mono" x="80" y="128">├── app.sqlite              </text>
+  <text class="small" x="320" y="128">메인 DB · 12+ 테이블</text>
+  <text class="mono" x="80" y="146">├── app.sqlite-shm          </text>
+  <text class="small" x="320" y="146">WAL 공유 메모리 (임시, gitignore)</text>
+  <text class="mono" x="80" y="164">└── app.sqlite-wal          </text>
+  <text class="small" x="320" y="164">WAL 로그 (임시, gitignore)</text>
+
+  <!-- App config block -->
+  <rect class="box creds" x="60" y="185" width="820" height="65"/>
+  <text class="title" x="75" y="210">앱 설정 + 자격증명</text>
+  <text class="mono" x="80" y="232">├── app-config.json         </text>
+  <text class="small" x="320" y="232">onboarding · 에이전트 선택 · 테마</text>
+  <text class="mono" x="80" y="244">└── media-config.json       </text>
+  <text class="small" x="320" y="244">BYOK API 키 (OD_MEDIA_CONFIG_DIR로 별도 위치 가능)</text>
+
+  <!-- Projects block -->
+  <rect class="box project" x="60" y="265" width="820" height="200"/>
+  <text class="title" x="75" y="290">프로젝트별 작업 폴더</text>
+  <text class="mono" x="80" y="313">└── projects/&lt;projectId&gt;/</text>
+  <text class="mono" x="100" y="333">    ├── index.html              </text>
+  <text class="small" x="350" y="333">메인 아티팩트</text>
+  <text class="mono" x="100" y="351">    ├── *.html, *.css, *.js     </text>
+  <text class="small" x="350" y="351">생성된 화면 파일</text>
+  <text class="mono" x="100" y="369">    ├── *.sketch.json           </text>
+  <text class="small" x="350" y="369">편집 가능 스케치 (편집기에서 변환)</text>
+  <text class="mono" x="100" y="387">    ├── *.png, *.jpg            </text>
+  <text class="small" x="350" y="387">업로드 이미지 + 미디어 생성 산출물</text>
+  <text class="mono" x="100" y="405">    ├── *.mp4                   </text>
+  <text class="small" x="350" y="405">Seedance / HyperFrames 산출물</text>
+  <text class="mono" x="100" y="423">    ├── *.artifact.json         </text>
+  <text class="small" x="350" y="423">아티팩트 메타데이터 사이드카</text>
+  <text class="mono" x="100" y="441">    └── .live-artifacts/        </text>
+  <text class="small" x="350" y="441">라이브 미리보기 캐시</text>
+  <text class="tiny" x="80" y="458" font-style="italic">git 연결 프로젝트는 metadata.baseDir로 사용자 폴더 직접 사용 (이 위치 미사용)</text>
+
+  <!-- Catalogs block -->
+  <rect class="box catalog" x="60" y="480" width="820" height="140"/>
+  <text class="title" x="75" y="505">사용자 콘텐츠 (shadow)</text>
+  <text class="mono" x="80" y="528">├── skills/&lt;id&gt;/             </text>
+  <text class="small" x="350" y="528">사용자 편집 스킬 (빌트인 가림)</text>
+  <text class="mono" x="80" y="546">├── design-systems/&lt;brand&gt;/  </text>
+  <text class="small" x="350" y="546">사용자 추가 디자인시스템</text>
+  <text class="mono" x="80" y="564">├── design-templates/&lt;id&gt;/   </text>
+  <text class="small" x="350" y="564">사용자 추가 템플릿</text>
+  <text class="mono" x="80" y="582">├── memories/                </text>
+  <text class="small" x="350" y="582">사용자 메모리 (자동 추출, Markdown)</text>
+  <text class="mono" x="80" y="600">├── mcp/                     </text>
+  <text class="small" x="350" y="600">MCP 서버 설정 + OAuth 토큰</text>
+  <text class="mono" x="80" y="618">└── connectors/              </text>
+  <text class="small" x="350" y="618">Composio 등 외부 커넥터 상태</text>
+</svg>
