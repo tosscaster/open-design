@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <marker id="arrBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1976d2"/>
+    </marker>
+    <style>
+      .box     { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .core    { fill: #e3f2fd; }
+      .helper  { fill: #f3e5f5; }
+      .title   { font-weight: 600; font-size: 14px; }
+      .small   { font-size: 11px; fill: #555; }
+      .label   { font-size: 11px; fill: #1976d2; }
+      .arrow   { stroke: #555; stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+      .http    { stroke: #1976d2; stroke-width: 1.6; fill: none; marker-end: url(#arrBlue); }
+      .ipc     { stroke: #6a1b9a; stroke-width: 1.6; fill: none; stroke-dasharray: 5 3; marker-end: url(#arr); }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <text x="450" y="28" text-anchor="middle" font-weight="700" font-size="16">apps/ — 6개 런타임의 통신 토폴로지</text>
+
+  <!-- daemon (center bottom) -->
+  <rect class="box core" x="350" y="320" width="200" height="100"/>
+  <text x="450" y="345" text-anchor="middle" font-weight="600">apps/daemon</text>
+  <text class="small" x="450" y="363" text-anchor="middle">Express · SQLite WAL</text>
+  <text class="small" x="450" y="380" text-anchor="middle">16 agent CLI 스폰</text>
+  <text class="small" x="450" y="397" text-anchor="middle">10+ REST/SSE 라우트</text>
+  <text class="small" x="450" y="414" text-anchor="middle">.od/app.sqlite</text>
+
+  <!-- web (top center) -->
+  <rect class="box core" x="350" y="130" width="200" height="80"/>
+  <text x="450" y="155" text-anchor="middle" font-weight="600">apps/web</text>
+  <text class="small" x="450" y="172" text-anchor="middle">Next.js 16 · React 18</text>
+  <text class="small" x="450" y="189" text-anchor="middle">App Router SPA</text>
+
+  <!-- desktop (left) -->
+  <rect class="box core" x="80" y="220" width="200" height="90"/>
+  <text x="180" y="245" text-anchor="middle" font-weight="600">apps/desktop</text>
+  <text class="small" x="180" y="263" text-anchor="middle">Electron 메인</text>
+  <text class="small" x="180" y="280" text-anchor="middle">BrowserWindow</text>
+  <text class="small" x="180" y="297" text-anchor="middle">PDF · folder import</text>
+
+  <!-- packaged (right) -->
+  <rect class="box core" x="620" y="220" width="200" height="90"/>
+  <text x="720" y="245" text-anchor="middle" font-weight="600">apps/packaged</text>
+  <text class="small" x="720" y="263" text-anchor="middle">번들 진입점</text>
+  <text class="small" x="720" y="280" text-anchor="middle">od:// 프로토콜</text>
+  <text class="small" x="720" y="297" text-anchor="middle">sidecar 부트스트랩</text>
+
+  <!-- landing-page (bottom left) -->
+  <rect class="box helper" x="80" y="460" width="200" height="70"/>
+  <text x="180" y="485" text-anchor="middle" font-weight="600">apps/landing-page</text>
+  <text class="small" x="180" y="503" text-anchor="middle">Astro 정적 사이트</text>
+  <text class="small" x="180" y="520" text-anchor="middle">(독립, deps 없음)</text>
+
+  <!-- telemetry-worker (bottom right) -->
+  <rect class="box helper" x="620" y="460" width="200" height="70"/>
+  <text x="720" y="485" text-anchor="middle" font-weight="600">apps/telemetry-worker</text>
+  <text class="small" x="720" y="503" text-anchor="middle">Cloudflare Worker</text>
+  <text class="small" x="720" y="520" text-anchor="middle">Langfuse 릴레이</text>
+
+  <!-- Edges -->
+  <!-- web <-> daemon HTTP/SSE -->
+  <path class="http" d="M 450 210 L 450 320"/>
+  <text class="label" x="460" y="270">HTTP · SSE</text>
+  <text class="label" x="460" y="285">/api/* rewrite</text>
+
+  <!-- desktop -> daemon sidecar IPC -->
+  <path class="ipc" d="M 230 310 C 260 360, 310 370, 350 370"/>
+  <text x="240" y="345" font-size="11" fill="#6a1b9a">sidecar IPC</text>
+
+  <!-- desktop -> web (loads URL) -->
+  <path class="arrow" d="M 230 220 C 270 180, 320 160, 350 160"/>
+  <text class="small" x="245" y="195">loadURL</text>
+
+  <!-- packaged → daemon + web + desktop (spawns) -->
+  <path class="ipc" d="M 670 310 C 640 360, 600 370, 550 370"/>
+  <text x="610" y="345" font-size="11" fill="#6a1b9a">spawn daemon</text>
+
+  <path class="ipc" d="M 700 220 C 660 180, 620 170, 550 170"/>
+  <text class="small" x="585" y="195" fill="#6a1b9a">spawn web</text>
+
+  <path class="ipc" d="M 620 265 L 280 265"/>
+  <text class="small" x="440" y="258" fill="#6a1b9a">spawn desktop · od:// 핸들러</text>
+
+  <!-- telemetry: daemon → worker -->
+  <path class="http" d="M 550 415 C 620 440, 680 450, 720 460"/>
+  <text class="label" x="600" y="455">langfuse</text>
+
+  <!-- Legend -->
+  <rect x="40" y="60" width="280" height="55" rx="6" fill="#fafafa" stroke="#ccc"/>
+  <line x1="55" y1="78" x2="85" y2="78" class="http"/>
+  <text x="92" y="82" font-size="11">HTTP / SSE</text>
+  <line x1="55" y1="98" x2="85" y2="98" class="ipc"/>
+  <text x="92" y="102" font-size="11">사이드카 IPC (Unix socket / Windows pipe)</text>
+
+  <!-- Note -->
+  <text class="small" x="450" y="540" text-anchor="middle">desktop은 web 포트를 추측하지 않고 sidecar STATUS로 URL을 얻음</text>
+</svg>

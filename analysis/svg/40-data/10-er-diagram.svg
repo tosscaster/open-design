@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 720" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">
+  <defs>
+    <marker id="cascade" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c62828"/>
+    </marker>
+    <marker id="setnull" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ef6c00"/>
+    </marker>
+    <style>
+      .table   { stroke: #333; stroke-width: 1.2; rx: 6; fill: #fff; }
+      .header  { fill: #e3f2fd; }
+      .root    { fill: #fff3e0; }
+      .name    { font-weight: 700; font-size: 13px; }
+      .pk      { font-weight: 600; font-size: 11px; fill: #1976d2; }
+      .col     { font-size: 11px; }
+      .small   { font-size: 10px; fill: #555; }
+      .cascade { stroke: #c62828; stroke-width: 1.4; fill: none; marker-end: url(#cascade); }
+      .setnull { stroke: #ef6c00; stroke-width: 1.4; fill: none; marker-end: url(#setnull); stroke-dasharray: 4 3; }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <text x="500" y="28" text-anchor="middle" font-weight="700" font-size="16">.od/app.sqlite — ER 다이어그램</text>
+
+  <!-- projects (top center) -->
+  <rect class="table root" x="380" y="60" width="240" height="120"/>
+  <rect class="header" x="380" y="60" width="240" height="28"/>
+  <text x="500" y="80" text-anchor="middle" class="name">projects</text>
+  <line x1="380" y1="88" x2="620" y2="88" stroke="#333"/>
+  <text x="395" y="106" class="pk">PK  id</text>
+  <text x="395" y="124" class="col">name · skill_id · design_system_id</text>
+  <text x="395" y="140" class="col">pending_prompt · metadata_json</text>
+  <text x="395" y="156" class="col">created_at · updated_at</text>
+  <text x="395" y="172" class="small">UNIQUE: id (project ID safe regex)</text>
+
+  <!-- conversations (left of messages) -->
+  <rect class="table" x="60" y="240" width="240" height="100"/>
+  <rect class="header" x="60" y="240" width="240" height="28"/>
+  <text x="180" y="260" text-anchor="middle" class="name">conversations</text>
+  <line x1="60" y1="268" x2="300" y2="268" stroke="#333"/>
+  <text x="75" y="286" class="pk">PK  id</text>
+  <text x="75" y="302" class="col">FK  project_id → projects (CASCADE)</text>
+  <text x="75" y="318" class="col">title · created_at · updated_at</text>
+  <text x="75" y="334" class="small">idx (project_id, updated_at DESC)</text>
+
+  <!-- messages -->
+  <rect class="table" x="60" y="400" width="240" height="120"/>
+  <rect class="header" x="60" y="400" width="240" height="28"/>
+  <text x="180" y="420" text-anchor="middle" class="name">messages</text>
+  <line x1="60" y1="428" x2="300" y2="428" stroke="#333"/>
+  <text x="75" y="446" class="pk">PK  id</text>
+  <text x="75" y="462" class="col">FK  conversation_id (CASCADE)</text>
+  <text x="75" y="478" class="col">role · content · position</text>
+  <text x="75" y="494" class="col">events_json · attachments_json</text>
+  <text x="75" y="510" class="col">run_id · run_status · last_run_event_id</text>
+
+  <!-- preview_comments -->
+  <rect class="table" x="370" y="240" width="260" height="120"/>
+  <rect class="header" x="370" y="240" width="260" height="28"/>
+  <text x="500" y="260" text-anchor="middle" class="name">preview_comments</text>
+  <line x1="370" y1="268" x2="630" y2="268" stroke="#333"/>
+  <text x="385" y="286" class="pk">PK  id</text>
+  <text x="385" y="302" class="col">FK  project_id, conversation_id (CASCADE)</text>
+  <text x="385" y="318" class="col">file_path · element_id · selector</text>
+  <text x="385" y="334" class="col">text · note · status · position_json</text>
+  <text x="385" y="350" class="small">UNIQUE (project, conv, file, element)</text>
+
+  <!-- tabs -->
+  <rect class="table" x="680" y="240" width="280" height="100"/>
+  <rect class="header" x="680" y="240" width="280" height="28"/>
+  <text x="820" y="260" text-anchor="middle" class="name">tabs</text>
+  <line x1="680" y1="268" x2="960" y2="268" stroke="#333"/>
+  <text x="695" y="286" class="pk">PK  (project_id, name)</text>
+  <text x="695" y="302" class="col">FK  project_id (CASCADE)</text>
+  <text x="695" y="318" class="col">position · is_active</text>
+  <text x="695" y="334" class="small">idx (project_id, position)</text>
+
+  <!-- deployments -->
+  <rect class="table" x="370" y="400" width="260" height="120"/>
+  <rect class="header" x="370" y="400" width="260" height="28"/>
+  <text x="500" y="420" text-anchor="middle" class="name">deployments</text>
+  <line x1="370" y1="428" x2="630" y2="428" stroke="#333"/>
+  <text x="385" y="446" class="pk">PK  id</text>
+  <text x="385" y="462" class="col">FK  project_id (CASCADE)</text>
+  <text x="385" y="478" class="col">file_name · provider_id · url</text>
+  <text x="385" y="494" class="col">status · target · deployment_count</text>
+  <text x="385" y="510" class="small">UNIQUE (project, file_name, provider)</text>
+
+  <!-- critique_runs -->
+  <rect class="table" x="680" y="400" width="280" height="120"/>
+  <rect class="header" x="680" y="400" width="280" height="28"/>
+  <text x="820" y="420" text-anchor="middle" class="name">critique_runs</text>
+  <line x1="680" y1="428" x2="960" y2="428" stroke="#333"/>
+  <text x="695" y="446" class="pk">PK  id</text>
+  <text x="695" y="462" class="col">FK  project_id (CASCADE)</text>
+  <text x="695" y="478" class="col">FK  conversation_id (SET NULL)</text>
+  <text x="695" y="494" class="col">status (CHECK 8종) · score · rounds_json</text>
+  <text x="695" y="510" class="col">artifact_path · transcript_path</text>
+
+  <!-- media_tasks -->
+  <rect class="table" x="370" y="560" width="260" height="120"/>
+  <rect class="header" x="370" y="560" width="260" height="28"/>
+  <text x="500" y="580" text-anchor="middle" class="name">media_tasks</text>
+  <line x1="370" y1="588" x2="630" y2="588" stroke="#333"/>
+  <text x="385" y="606" class="pk">PK  id</text>
+  <text x="385" y="622" class="col">FK  project_id (CASCADE)</text>
+  <text x="385" y="638" class="col">status CHECK 5종 · surface · model</text>
+  <text x="385" y="654" class="col">progress_json · file_json · error_json</text>
+  <text x="385" y="670" class="col">started_at · ended_at</text>
+
+  <!-- routines + routine_runs -->
+  <rect class="table" x="60" y="560" width="240" height="60"/>
+  <rect class="header" x="60" y="560" width="240" height="28"/>
+  <text x="180" y="580" text-anchor="middle" class="name">routines</text>
+  <line x1="60" y1="588" x2="300" y2="588" stroke="#333"/>
+  <text x="75" y="606" class="col">PK id · name · prompt · schedule_kind</text>
+
+  <rect class="table" x="60" y="635" width="240" height="60"/>
+  <rect class="header" x="60" y="635" width="240" height="28"/>
+  <text x="180" y="655" text-anchor="middle" class="name">routine_runs</text>
+  <line x1="60" y1="663" x2="300" y2="663" stroke="#333"/>
+  <text x="75" y="681" class="col">FK routine_id (CASCADE) · status · summary</text>
+
+  <!-- templates -->
+  <rect class="table" x="680" y="560" width="280" height="100"/>
+  <rect class="header" x="680" y="560" width="280" height="28"/>
+  <text x="820" y="580" text-anchor="middle" class="name">templates</text>
+  <line x1="680" y1="588" x2="960" y2="588" stroke="#333"/>
+  <text x="695" y="606" class="pk">PK  id</text>
+  <text x="695" y="622" class="col">name · description · files_json</text>
+  <text x="695" y="638" class="col">source_project_id · created_at</text>
+  <text x="695" y="654" class="small">독립 (project 참조 없음)</text>
+
+  <!-- Relationship arrows -->
+  <!-- projects → conversations -->
+  <path class="cascade" d="M 410 180 C 350 200, 250 220, 180 240"/>
+  <!-- projects → preview_comments -->
+  <path class="cascade" d="M 500 180 L 500 240"/>
+  <!-- projects → tabs -->
+  <path class="cascade" d="M 580 180 C 650 200, 750 220, 820 240"/>
+  <!-- conversations → messages -->
+  <path class="cascade" d="M 180 340 L 180 400"/>
+  <!-- conversations → preview_comments (FK conversation) -->
+  <path class="cascade" d="M 300 290 L 370 290" stroke-dasharray="3 3"/>
+  <!-- projects → deployments -->
+  <path class="cascade" d="M 500 350 L 500 400" stroke-dasharray="3 3"/>
+  <text class="small" x="510" y="378" fill="#c62828">(via projects ↑)</text>
+  <!-- projects → critique_runs -->
+  <path class="cascade" d="M 620 180 C 700 240, 800 320, 820 400"/>
+  <!-- conversations → critique_runs (SET NULL) -->
+  <path class="setnull" d="M 300 320 C 500 340, 700 380, 700 400"/>
+  <!-- projects → media_tasks -->
+  <path class="cascade" d="M 500 520 L 500 560"/>
+  <!-- routines → routine_runs -->
+  <path class="cascade" d="M 180 620 L 180 635"/>
+
+  <!-- Legend -->
+  <rect x="40" y="700" width="920" height="10" rx="2" fill="none"/>
+  <text class="small" x="40" y="710" font-style="italic">
+    빨간 화살표: ON DELETE CASCADE · 주황 점선: ON DELETE SET NULL · WAL 모드 · foreign_keys = ON
+  </text>
+</svg>

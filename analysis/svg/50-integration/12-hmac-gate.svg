@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1976d2"/>
+    </marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2e7d32"/>
+    </marker>
+    <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c62828"/>
+    </marker>
+    <style>
+      .lane    { stroke: #999; stroke-dasharray: 2 4; fill: none; }
+      .head    { fill: #e3f2fd; stroke: #333; rx: 6; }
+      .stage   { fill: #fafafa; rx: 8; stroke: #ccc; }
+      .arrow   { stroke: #555; stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+      .ipc     { stroke: #1976d2; stroke-width: 1.6; fill: none; stroke-dasharray: 5 3; marker-end: url(#arrB); }
+      .ok      { stroke: #2e7d32; stroke-width: 1.5; fill: none; marker-end: url(#arrG); }
+      .deny    { stroke: #c62828; stroke-width: 1.5; fill: none; marker-end: url(#arrR); }
+      .small   { font-size: 11px; }
+      .lbl     { font-size: 11px; fill: #555; }
+      .title   { font-weight: 600; font-size: 14px; }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <text x="450" y="28" text-anchor="middle" font-weight="700" font-size="16">HMAC 데스크탑 인증 게이트 (PR #974) — folder import 보호</text>
+
+  <!-- Lane headers -->
+  <rect class="head" x="50" y="55" width="180" height="34"/>
+  <text x="140" y="77" text-anchor="middle" font-weight="600">Desktop runtime</text>
+
+  <rect class="head" x="290" y="55" width="200" height="34"/>
+  <text x="390" y="77" text-anchor="middle" font-weight="600">사용자 / 렌더러</text>
+
+  <rect class="head" x="550" y="55" width="300" height="34"/>
+  <text x="700" y="77" text-anchor="middle" font-weight="600">apps/daemon (Express)</text>
+
+  <!-- Lifelines -->
+  <line class="lane" x1="140" y1="90" x2="140" y2="610"/>
+  <line class="lane" x1="390" y1="90" x2="390" y2="610"/>
+  <line class="lane" x1="700" y1="90" x2="700" y2="610"/>
+
+  <!-- Phase A: Boot-time secret registration -->
+  <rect class="stage" x="40" y="105" width="820" height="105"/>
+  <text class="title" x="60" y="125">A. 부팅 시 — secret 등록 (한 번)</text>
+
+  <rect x="60" y="140" width="160" height="40" rx="4" fill="#fff" stroke="#666"/>
+  <text class="small" x="140" y="158" text-anchor="middle">randomBytes(32)</text>
+  <text class="small" x="140" y="174" text-anchor="middle">→ secret</text>
+
+  <path class="ipc" d="M 220 175 L 700 175"/>
+  <text class="lbl" x="380" y="170">REGISTER_DESKTOP_AUTH (sidecar IPC)</text>
+
+  <rect x="540" y="195" width="320" height="12" rx="2" fill="#fff" stroke="#666"/>
+  <text x="700" y="205" text-anchor="middle" font-size="10">desktopAuthSecret ← secret · gate=active</text>
+
+  <!-- Phase B: Token generation + verification -->
+  <rect class="stage" x="40" y="225" width="820" height="380"/>
+  <text class="title" x="60" y="245">B. 폴더 import 요청 — 토큰 생성 + 검증</text>
+
+  <!-- 1. user clicks button -->
+  <path class="arrow" d="M 390 270 L 140 270"/>
+  <text class="lbl" x="200" y="265">1. "폴더 import" 버튼</text>
+
+  <!-- 2. Desktop generates token -->
+  <rect x="40" y="285" width="190" height="100" rx="4" fill="#fff" stroke="#666"/>
+  <text class="small" x="135" y="302" text-anchor="middle" font-weight="600">2. Desktop 토큰 생성</text>
+  <text class="small" x="135" y="319" text-anchor="middle">nonce = randomUUID()</text>
+  <text class="small" x="135" y="335" text-anchor="middle">exp = ISO(now + 60s)</text>
+  <text class="small" x="135" y="351" text-anchor="middle">sig = HMAC-SHA256(secret,</text>
+  <text class="small" x="135" y="365" text-anchor="middle">  `${baseDir}\n${nonce}\n${exp}`)</text>
+  <text class="small" x="135" y="381" text-anchor="middle">token = nonce~exp~sig</text>
+
+  <!-- 3. POST /api/import/folder -->
+  <path class="arrow" d="M 230 415 L 700 415"/>
+  <text class="lbl" x="270" y="410">3. POST /api/import/folder · X-OD-Desktop-Import-Token: &lt;token&gt;</text>
+
+  <!-- 4. Verification box -->
+  <rect x="540" y="440" width="320" height="155" rx="4" fill="#fff" stroke="#666"/>
+  <text class="small" x="700" y="458" text-anchor="middle" font-weight="600">4. verifyDesktopImportToken</text>
+  <text class="small" x="555" y="478">  (a) token.split('~').length === 3?</text>
+  <text class="small" x="555" y="494">  (b) Date.parse(exp) &gt; now ?</text>
+  <text class="small" x="555" y="510">  (c) exp - now &lt; 2 × TTL ?  (시계 왜곡)</text>
+  <text class="small" x="555" y="526">  (d) timingSafeEqual(sig, expected) ?</text>
+  <text class="small" x="555" y="542">  (e) consumedNonces.has(nonce)? — replay</text>
+  <text class="small" x="555" y="558">  (f) consumedNonces.set(nonce, expMs)</text>
+  <text class="small" x="555" y="578" font-weight="600">→ ok ? import 진행 : 401 reject</text>
+
+  <!-- decision: ok or deny -->
+  <path class="ok" d="M 540 480 C 480 480, 440 470, 390 460"/>
+  <text class="small" x="430" y="475" fill="#2e7d32">200 ok</text>
+  <path class="deny" d="M 540 530 C 480 540, 440 535, 390 525"/>
+  <text class="small" x="430" y="540" fill="#c62828">401</text>
+
+  <!-- Footer: invariants -->
+  <rect x="40" y="620" width="820" height="0" rx="6"/>
+
+  <text font-size="11" x="60" y="640" font-style="italic" fill="#555">
+    timingSafeStringEquals · nonce 일회용 · 2×TTL 상한 · OD_REQUIRE_DESKTOP_AUTH=1 강제 모드
+  </text>
+</svg>

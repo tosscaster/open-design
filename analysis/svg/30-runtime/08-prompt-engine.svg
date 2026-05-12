@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <style>
+      .box     { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .turn1   { fill: #fce4ec; }
+      .turn2   { fill: #fff3e0; }
+      .turn3   { fill: #e8f5e9; }
+      .stack   { fill: #e3f2fd; }
+      .title   { font-weight: 600; font-size: 14px; }
+      .small   { font-size: 11px; fill: #555; }
+      .arrow   { stroke: #555; stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <text x="450" y="28" text-anchor="middle" font-weight="700" font-size="16">3-턴 패턴 + 11-레이어 시스템 프롬프트 조립</text>
+
+  <!-- 3-turn pattern (left column) -->
+  <text class="title" x="40" y="65">3-턴 결정론적 패턴</text>
+
+  <rect class="box turn1" x="40" y="80" width="360" height="100"/>
+  <text font-weight="600" x="55" y="100">Turn 1 — discovery 폼 (RULE 1)</text>
+  <text class="small" x="55" y="118">사용자가 새 brief 입력 → 모델의 첫 출력은</text>
+  <text class="small" x="55" y="134">한 줄 prose + &lt;question-form id="discovery"&gt;.</text>
+  <text class="small" x="55" y="150">No file reads. No Bash. No TodoWrite. No thinking.</text>
+  <text class="small" x="55" y="166">7개 이하 질문: output · platform · audience · tone · brand · scale</text>
+
+  <rect class="box turn2" x="40" y="195" width="360" height="135"/>
+  <text font-weight="600" x="55" y="215">Turn 2 — branch (RULE 2)</text>
+  <text class="small" x="55" y="233">brand 답변에 따라 3분기:</text>
+  <text class="small" x="55" y="251">A. "Pick a direction for me" → direction-cards 폼</text>
+  <text class="small" x="55" y="267">     5개 큐레이션: Editorial / Modern Min / Human / Tech / Brutalist</text>
+  <text class="small" x="55" y="283">     클릭 한 번 → 결정론적 OKLch 팔레트 + 폰트 스택</text>
+  <text class="small" x="55" y="299">B. 브랜드 스펙/레퍼런스 → 5단계 자산 추출 (huashu-design)</text>
+  <text class="small" x="55" y="315">C. 기타 → 바로 RULE 3</text>
+
+  <rect class="box turn3" x="40" y="345" width="360" height="200"/>
+  <text font-weight="600" x="55" y="365">Turn 3+ — TodoWrite 빌드 (RULE 3)</text>
+  <text class="small" x="55" y="385">9단계 표준 플랜:</text>
+  <text class="small" x="55" y="401">  1. Read DESIGN.md + skill assets</text>
+  <text class="small" x="55" y="417">  2. Bind palette / brand-spec to :root</text>
+  <text class="small" x="55" y="433">  3. Plan section/slide/screen list</text>
+  <text class="small" x="55" y="449">  4. Copy seed template</text>
+  <text class="small" x="55" y="465">  5. Paste &amp; fill layouts</text>
+  <text class="small" x="55" y="481">  6. Replace [REPLACE] placeholders</text>
+  <text class="small" x="55" y="497">  7. Self-check: checklist.md P0 (non-negotiable)</text>
+  <text class="small" x="55" y="513">  8. Critique: 5-dim radar (non-negotiable)</text>
+  <text class="small" x="55" y="529">  9. Emit &lt;artifact&gt; if new canonical HTML written</text>
+
+  <!-- 11-layer stack (right) -->
+  <text class="title" x="440" y="65">composeSystemPrompt() 조립 순서 (위가 우선)</text>
+
+  <rect class="box stack" x="440" y="80" width="420" height="465"/>
+
+  <g font-size="11">
+    <rect x="455" y="95" width="390" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="465" y="113" font-weight="600">1. DISCOVERY_AND_PHILOSOPHY</text>
+    <text x="600" y="113" font-size="10" fill="#888">— RULE 1/2/3, anti-slop 체크리스트</text>
+
+    <rect x="455" y="128" width="390" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="465" y="146" font-weight="600">2. BASE_SYSTEM_PROMPT</text>
+    <text x="610" y="146" font-size="10" fill="#888">— official designer identity</text>
+
+    <rect x="455" y="161" width="390" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="465" y="179" font-weight="600">3. Personal memory</text>
+    <text x="565" y="179" font-size="10" fill="#888">— 사용자 auto-extracted 선호도</text>
+
+    <rect x="455" y="194" width="390" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="465" y="212" font-weight="600">4. Design system DESIGN.md</text>
+    <text x="620" y="212" font-size="10" fill="#888">— 활성 브랜드 전체 prose</text>
+
+    <rect x="455" y="227" width="390" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="465" y="245" font-weight="600">5. Design system tokens.css</text>
+    <text x="620" y="245" font-size="10" fill="#888">— machine-readable (옵션)</text>
+
+    <rect x="455" y="260" width="390" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="465" y="278" font-weight="600">6. Reference fixture.html</text>
+    <text x="600" y="278" font-size="10" fill="#888">— worked component examples</text>
+
+    <rect x="455" y="293" width="390" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="465" y="311" font-weight="600">7. Craft references</text>
+    <text x="565" y="311" font-size="10" fill="#888">— craft.requires에 명시된 슬러그만</text>
+
+    <rect x="455" y="326" width="390" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="465" y="344" font-weight="600">8. Active skill body</text>
+    <text x="570" y="344" font-size="10" fill="#888">— derivePreflight 자동 inject</text>
+
+    <rect x="455" y="359" width="390" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="465" y="377" font-weight="600">9. Project metadata</text>
+    <text x="572" y="377" font-size="10" fill="#888">— kind/fidelity/platform 규칙</text>
+
+    <rect x="455" y="392" width="390" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="465" y="410" font-weight="600">10. Deck framework</text>
+    <text x="572" y="410" font-size="10" fill="#888">— kind=deck &amp; skill seed 없을 때만</text>
+
+    <rect x="455" y="425" width="390" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="465" y="443" font-weight="600">11. Media generation contract</text>
+    <text x="638" y="443" font-size="10" fill="#888">— image/video/audio 모드</text>
+
+    <rect x="455" y="458" width="390" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="465" y="476" font-weight="600">12. Critique Theater protocol</text>
+    <text x="635" y="476" font-size="10" fill="#888">— critique.enabled 시</text>
+
+    <rect x="455" y="491" width="390" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="465" y="509" font-weight="600">13. External MCP directive</text>
+    <text x="625" y="509" font-size="10" fill="#888">— 인증된 MCP 서버</text>
+  </g>
+
+  <text class="small" x="455" y="535" font-style="italic">↑ 우선 — 나중의 모든 softer wording을 override</text>
+
+  <!-- Bottom band: 5 directions -->
+  <rect x="40" y="565" width="820" height="65" rx="6" fill="#fff3e0" stroke="#bbb"/>
+  <text class="title" x="60" y="585">5개 결정론적 방향 (OKLch 팔레트)</text>
+
+  <g font-size="10">
+    <rect x="60" y="595" width="150" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="608">Editorial Monocle</text>
+    <text x="68" y="620" fill="#888">accent: oklch(52% 0.10 28)</text>
+
+    <rect x="220" y="595" width="150" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="228" y="608">Modern Minimal</text>
+    <text x="228" y="620" fill="#888">accent: oklch(58% 0.18 255)</text>
+
+    <rect x="380" y="595" width="150" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="388" y="608">Human / Approachable</text>
+    <text x="388" y="620" fill="#888">accent: oklch(56% 0.12 170)</text>
+
+    <rect x="540" y="595" width="150" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="548" y="608">Tech / Utility</text>
+    <text x="548" y="620" fill="#888">accent: oklch(58% 0.16 145)</text>
+
+    <rect x="700" y="595" width="150" height="28" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="708" y="608">Brutalist Experimental</text>
+    <text x="708" y="620" fill="#888">accent: oklch(60% 0.22 25)</text>
+  </g>
+
+  <!-- arrows between turns -->
+  <path class="arrow" d="M 220 180 L 220 195"/>
+  <path class="arrow" d="M 220 330 L 220 345"/>
+</svg>

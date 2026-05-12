@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 580" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <style>
+      .box     { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .content { fill: #fef7e0; }
+      .daemon  { fill: #e3f2fd; }
+      .prompt  { fill: #e8f5e9; }
+      .title   { font-weight: 600; font-size: 14px; }
+      .small   { font-size: 11px; fill: #555; }
+      .arrow   { stroke: #555; stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <text x="450" y="28" text-anchor="middle" font-weight="700" font-size="16">콘텐츠 자산 → 데몬 카탈로그화 → 시스템 프롬프트 주입</text>
+
+  <!-- Content layer (top) -->
+  <rect class="box content" x="40" y="60" width="160" height="80"/>
+  <text class="title" x="120" y="85" text-anchor="middle">skills/</text>
+  <text class="small" x="120" y="105" text-anchor="middle">100여 개 SKILL.md</text>
+  <text class="small" x="120" y="121" text-anchor="middle">frontmatter:</text>
+  <text class="small" x="120" y="135" text-anchor="middle">mode/scenario/craft</text>
+
+  <rect class="box content" x="215" y="60" width="160" height="80"/>
+  <text class="title" x="295" y="85" text-anchor="middle">design-systems/</text>
+  <text class="small" x="295" y="105" text-anchor="middle">150여 DESIGN.md</text>
+  <text class="small" x="295" y="121" text-anchor="middle">color · type</text>
+  <text class="small" x="295" y="135" text-anchor="middle">components · voice</text>
+
+  <rect class="box content" x="390" y="60" width="160" height="80"/>
+  <text class="title" x="470" y="85" text-anchor="middle">design-templates/</text>
+  <text class="small" x="470" y="105" text-anchor="middle">100여 템플릿</text>
+  <text class="small" x="470" y="121" text-anchor="middle">deck/prototype/...</text>
+  <text class="small" x="470" y="135" text-anchor="middle">assets · scripts · refs</text>
+
+  <rect class="box content" x="565" y="60" width="160" height="80"/>
+  <text class="title" x="645" y="85" text-anchor="middle">craft/</text>
+  <text class="small" x="645" y="105" text-anchor="middle">12 보편 규칙</text>
+  <text class="small" x="645" y="121" text-anchor="middle">typography · color</text>
+  <text class="small" x="645" y="135" text-anchor="middle">anti-ai-slop · ...</text>
+
+  <rect class="box content" x="740" y="60" width="120" height="80"/>
+  <text class="title" x="800" y="85" text-anchor="middle">prompt-templates/</text>
+  <text class="small" x="800" y="105" text-anchor="middle">100여 JSON</text>
+  <text class="small" x="800" y="121" text-anchor="middle">gpt-image-2</text>
+  <text class="small" x="800" y="135" text-anchor="middle">Seedance · HF</text>
+
+  <!-- Daemon catalog layer -->
+  <rect class="box daemon" x="40" y="200" width="820" height="160"/>
+  <text class="title" x="60" y="225">apps/daemon/src/skills.ts + design-systems.ts</text>
+
+  <rect x="60" y="240" width="220" height="100" rx="6" fill="#fff" stroke="#666"/>
+  <text font-weight="600" x="170" y="262" text-anchor="middle">listSkills(roots)</text>
+  <text class="small" x="170" y="280" text-anchor="middle">재귀 스캔 + frontmatter 파싱</text>
+  <text class="small" x="170" y="296" text-anchor="middle">정규화 (mode, scenario, …)</text>
+  <text class="small" x="170" y="312" text-anchor="middle">shadowing (user > built-in)</text>
+  <text class="small" x="170" y="328" text-anchor="middle">derived examples 표면화</text>
+
+  <rect x="300" y="240" width="220" height="100" rx="6" fill="#fff" stroke="#666"/>
+  <text font-weight="600" x="410" y="262" text-anchor="middle">listDesignSystems(root)</text>
+  <text class="small" x="410" y="280" text-anchor="middle">H1 → title</text>
+  <text class="small" x="410" y="296" text-anchor="middle">blockquote → category</text>
+  <text class="small" x="410" y="312" text-anchor="middle">hex grep → swatches[4]</text>
+  <text class="small" x="410" y="328" text-anchor="middle">240자 summary</text>
+
+  <rect x="540" y="240" width="300" height="100" rx="6" fill="#fff" stroke="#666"/>
+  <text font-weight="600" x="690" y="262" text-anchor="middle">/api/skills, /api/design-systems</text>
+  <text class="small" x="690" y="280" text-anchor="middle">GET 카탈로그 · GET 상세</text>
+  <text class="small" x="690" y="296" text-anchor="middle">POST 사용자 스킬 생성</text>
+  <text class="small" x="690" y="312" text-anchor="middle">PUT 편집 → 자동 클론</text>
+  <text class="small" x="690" y="328" text-anchor="middle">examples/&lt;k&gt;.html → derived card</text>
+
+  <!-- Prompt composition (bottom) -->
+  <rect class="box prompt" x="40" y="400" width="820" height="120"/>
+  <text class="title" x="60" y="425">apps/daemon/src/prompts/system.ts — composeSystemPrompt()</text>
+  <text class="small" x="60" y="445">turn 시작 시 활성 스킬/디자인시스템/craft를 system prompt에 inject</text>
+  <text class="small" x="60" y="463">• 디자인시스템 DESIGN.md (전체) + tokens.css (machine-readable, 옵션)</text>
+  <text class="small" x="60" y="479">• craft.requires에 명시된 슬러그만 craft/*.md에서 골라 주입 (토큰 효율)</text>
+  <text class="small" x="60" y="495">• 스킬 본문 + derivePreflight (template.html, checklist.md 미리 읽기 강제)</text>
+  <text class="small" x="60" y="511">• kind=deck이고 skill seed 없으면 DECK_FRAMEWORK_DIRECTIVE 주입</text>
+
+  <!-- Arrows -->
+  <path class="arrow" d="M 120 140 L 120 200"/>
+  <path class="arrow" d="M 295 140 L 295 200"/>
+  <path class="arrow" d="M 470 140 L 470 200"/>
+  <path class="arrow" d="M 645 140 L 645 200"/>
+  <path class="arrow" d="M 800 140 L 800 200"/>
+
+  <path class="arrow" d="M 170 340 L 170 400"/>
+  <path class="arrow" d="M 410 340 L 410 400"/>
+  <path class="arrow" d="M 690 340 L 690 400"/>
+
+  <!-- Note -->
+  <text class="small" x="450" y="555" text-anchor="middle">콘텐츠 = 코드와 동등한 1급 시민. 사용자가 자유롭게 편집/추가/오버라이드해도 시스템 프롬프트 토큰은 효율 유지.</text>
+</svg>

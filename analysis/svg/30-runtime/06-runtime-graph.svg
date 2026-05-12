@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <marker id="arrBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1976d2"/>
+    </marker>
+    <marker id="arrPurple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6a1b9a"/>
+    </marker>
+    <style>
+      .box     { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .user    { fill: #f3e5f5; }
+      .daemon  { fill: #e3f2fd; }
+      .agent   { fill: #fff3e0; }
+      .data    { fill: #e8f5e9; }
+      .title   { font-weight: 600; font-size: 14px; }
+      .small   { font-size: 11px; fill: #555; }
+      .arrow   { stroke: #555; stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+      .http    { stroke: #1976d2; stroke-width: 1.6; fill: none; marker-end: url(#arrBlue); }
+      .ipc     { stroke: #6a1b9a; stroke-width: 1.6; fill: none; stroke-dasharray: 5 3; marker-end: url(#arrPurple); }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <text x="450" y="28" text-anchor="middle" font-weight="700" font-size="16">통합 호출 그래프 — 사용자 명령 → 데몬 → 에이전트 → 아티팩트</text>
+
+  <!-- User -->
+  <rect class="box user" x="40" y="60" width="170" height="60"/>
+  <text font-weight="600" x="125" y="85" text-anchor="middle">사용자</text>
+  <text class="small" x="125" y="105" text-anchor="middle">pnpm tools-dev / od / 웹 UI</text>
+
+  <!-- tools-dev -->
+  <rect class="box user" x="270" y="60" width="170" height="60"/>
+  <text font-weight="600" x="355" y="85" text-anchor="middle">tools-dev / packaged</text>
+  <text class="small" x="355" y="105" text-anchor="middle">사이드카 스폰 · stamp</text>
+
+  <!-- Web -->
+  <rect class="box daemon" x="500" y="60" width="170" height="60"/>
+  <text font-weight="600" x="585" y="85" text-anchor="middle">apps/web</text>
+  <text class="small" x="585" y="105" text-anchor="middle">/api/* rewrite</text>
+
+  <!-- Desktop -->
+  <rect class="box daemon" x="730" y="60" width="130" height="60"/>
+  <text font-weight="600" x="795" y="85" text-anchor="middle">apps/desktop</text>
+  <text class="small" x="795" y="105" text-anchor="middle">Electron 메인</text>
+
+  <!-- Daemon (center) -->
+  <rect class="box daemon" x="200" y="190" width="500" height="160"/>
+  <text class="title" x="225" y="215">apps/daemon (Express + SQLite)</text>
+
+  <rect x="220" y="230" width="220" height="50" rx="4" fill="#fafafa" stroke="#999"/>
+  <text x="330" y="252" text-anchor="middle" font-size="12" font-weight="600">10+ 도메인 라우트</text>
+  <text class="small" x="330" y="269" text-anchor="middle">chat · projects · live-artifacts · ...</text>
+
+  <rect x="460" y="230" width="220" height="50" rx="4" fill="#fafafa" stroke="#999"/>
+  <text x="570" y="252" text-anchor="middle" font-size="12" font-weight="600">prompts/ 엔진</text>
+  <text class="small" x="570" y="269" text-anchor="middle">3-턴 + 11-레이어 조립</text>
+
+  <rect x="220" y="290" width="220" height="45" rx="4" fill="#fafafa" stroke="#999"/>
+  <text x="330" y="310" text-anchor="middle" font-size="12" font-weight="600">runtimes/ 어댑터</text>
+  <text class="small" x="330" y="326" text-anchor="middle">16 CLI 정의 + 4 파서</text>
+
+  <rect x="460" y="290" width="220" height="45" rx="4" fill="#fafafa" stroke="#999"/>
+  <text x="570" y="310" text-anchor="middle" font-size="12" font-weight="600">skills + design-systems</text>
+  <text class="small" x="570" y="326" text-anchor="middle">카탈로그 + shadowing</text>
+
+  <!-- Agent CLI children -->
+  <rect class="box agent" x="40" y="420" width="370" height="100"/>
+  <text class="title" x="60" y="445">자식 프로세스 (16 코딩 에이전트 CLI)</text>
+  <text class="small" x="60" y="465">Claude Code · Codex · Cursor · Gemini · OpenCode</text>
+  <text class="small" x="60" y="481">Pi · Hermes · Kimi · Kiro · Kilo · Vibe · DeepSeek</text>
+  <text class="small" x="60" y="497">stream: claude-stream-json / json-event-stream</text>
+  <text class="small" x="60" y="513">         / acp-json-rpc / pi-rpc → 파서로 정규화</text>
+
+  <!-- Persistence -->
+  <rect class="box data" x="450" y="420" width="200" height="100"/>
+  <text class="title" x="470" y="445">.od/app.sqlite</text>
+  <text class="small" x="470" y="465">projects, conversations</text>
+  <text class="small" x="470" y="481">messages, comments</text>
+  <text class="small" x="470" y="497">deployments, routines</text>
+  <text class="small" x="470" y="513">critique_runs, media_tasks</text>
+
+  <!-- File artifacts -->
+  <rect class="box data" x="680" y="420" width="180" height="100"/>
+  <text class="title" x="695" y="445">.od/projects/&lt;id&gt;/</text>
+  <text class="small" x="695" y="465">files/ HTML 아티팩트</text>
+  <text class="small" x="695" y="481">live-artifacts/</text>
+  <text class="small" x="695" y="497">.od/artifacts/</text>
+  <text class="small" x="695" y="513">.od/memories/</text>
+
+  <!-- Arrows -->
+  <path class="arrow" d="M 210 90 L 270 90"/>
+  <path class="ipc" d="M 440 90 L 500 90"/>
+  <path class="http" d="M 670 90 L 730 90"/>
+  <path class="ipc" d="M 795 120 L 700 190"/>
+
+  <path class="ipc" d="M 355 120 L 355 190"/>
+  <path class="http" d="M 585 120 L 460 190"/>
+
+  <!-- daemon → child agents -->
+  <path class="arrow" d="M 330 350 L 250 420"/>
+  <text class="small" x="250" y="390" fill="#666">spawn</text>
+
+  <!-- daemon → sqlite -->
+  <path class="arrow" d="M 460 350 L 510 420"/>
+
+  <!-- daemon → file artifacts -->
+  <path class="arrow" d="M 620 350 L 740 420"/>
+
+  <!-- SSE back to web -->
+  <path class="http" d="M 460 230 C 520 165, 580 145, 585 120" stroke-dasharray="3 3"/>
+  <text class="small" x="540" y="180" fill="#1976d2">SSE 이벤트</text>
+
+  <!-- Legend -->
+  <rect x="40" y="540" width="820" height="50" rx="6" fill="#fafafa" stroke="#ccc"/>
+  <line x1="55" y1="558" x2="85" y2="558" class="http"/>
+  <text class="small" x="92" y="562">HTTP / SSE</text>
+  <line x1="180" y1="558" x2="210" y2="558" class="ipc"/>
+  <text class="small" x="217" y="562">사이드카 IPC</text>
+  <line x1="320" y1="558" x2="350" y2="558" class="arrow"/>
+  <text class="small" x="357" y="562">프로세스 spawn / 파일 I/O</text>
+  <text class="small" x="60" y="578">데이터/로그/런타임 경로는 namespace로만 스코프 — 포트는 transient. 모든 외부 API는 packages/contracts DTO를 통과.</text>
+</svg>

@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <style>
+      .box     { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .agent   { fill: #fff3e0; }
+      .parser  { fill: #e3f2fd; }
+      .union   { fill: #e8f5e9; }
+      .title   { font-weight: 600; font-size: 14px; }
+      .small   { font-size: 11px; fill: #555; }
+      .tiny    { font-size: 10px; fill: #555; }
+      .arrow   { stroke: #555; stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <text x="450" y="28" text-anchor="middle" font-weight="700" font-size="16">에이전트 런타임 파이프라인 — 16 CLI → 4 파서 → 단일 이벤트 union</text>
+
+  <!-- Agent column -->
+  <rect class="box agent" x="40" y="60" width="240" height="450"/>
+  <text class="title" x="60" y="85">16 어댑터 (defs/&lt;id&gt;.ts)</text>
+  <text class="tiny" x="60" y="103">RuntimeAgentDef 선언</text>
+
+  <g font-size="11">
+    <rect x="60" y="115" width="200" height="22" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="130">claude · stream-json · stdin</text>
+    <rect x="60" y="142" width="200" height="22" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="157">codex · json-event · stdin · reasoning</text>
+    <rect x="60" y="169" width="200" height="22" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="184">devin · acp-json-rpc</text>
+    <rect x="60" y="196" width="200" height="22" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="211">cursor-agent · stream-json</text>
+    <rect x="60" y="223" width="200" height="22" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="238">gemini · json-event</text>
+    <rect x="60" y="250" width="200" height="22" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="265">opencode · json-event</text>
+    <rect x="60" y="277" width="200" height="22" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="292">qwen · plain</text>
+    <rect x="60" y="304" width="200" height="22" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="319">qoder · qoder-stream-json</text>
+    <rect x="60" y="331" width="200" height="22" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="346">copilot · copilot-stream-json</text>
+    <rect x="60" y="358" width="200" height="22" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="373">hermes · acp-json-rpc · MCP</text>
+    <rect x="60" y="385" width="200" height="22" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="400">kimi · acp-json-rpc · MCP</text>
+    <rect x="60" y="412" width="200" height="22" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="427">pi · pi-rpc · 이미지 base64</text>
+    <rect x="60" y="439" width="200" height="22" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="454">kiro/kilo/vibe · acp-json-rpc</text>
+    <rect x="60" y="466" width="200" height="22" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="68" y="481">deepseek · argv · max 30KB</text>
+  </g>
+
+  <text class="tiny" x="60" y="503">+ buildArgs · capabilityFlags · fallbackBins</text>
+
+  <!-- Parsers column -->
+  <rect class="box parser" x="340" y="100" width="220" height="80"/>
+  <text font-weight="600" x="450" y="123" text-anchor="middle">claude-stream-json</text>
+  <text class="small" x="450" y="141" text-anchor="middle">claude-stream.ts</text>
+  <text class="small" x="450" y="157" text-anchor="middle">content_block_start/delta/stop</text>
+  <text class="small" x="450" y="173" text-anchor="middle">tool_use 입력 누적 → 한 번 emit</text>
+
+  <rect class="box parser" x="340" y="195" width="220" height="80"/>
+  <text font-weight="600" x="450" y="218" text-anchor="middle">json-event-stream</text>
+  <text class="small" x="450" y="236" text-anchor="middle">json-event-stream.ts</text>
+  <text class="small" x="450" y="252" text-anchor="middle">codex / opencode / gemini /</text>
+  <text class="small" x="450" y="268" text-anchor="middle">cursor-agent 어댑터별 분기</text>
+
+  <rect class="box parser" x="340" y="290" width="220" height="80"/>
+  <text font-weight="600" x="450" y="313" text-anchor="middle">acp-json-rpc</text>
+  <text class="small" x="450" y="331" text-anchor="middle">acp.ts</text>
+  <text class="small" x="450" y="347" text-anchor="middle">initialize → session/new →</text>
+  <text class="small" x="450" y="363" text-anchor="middle">session/update notifications</text>
+
+  <rect class="box parser" x="340" y="385" width="220" height="80"/>
+  <text font-weight="600" x="450" y="408" text-anchor="middle">pi-rpc</text>
+  <text class="small" x="450" y="426" text-anchor="middle">pi-rpc.ts</text>
+  <text class="small" x="450" y="442" text-anchor="middle">stdin RPC + stdout 이벤트</text>
+  <text class="small" x="450" y="458" text-anchor="middle">멀티모달 image base64</text>
+
+  <!-- Plain stream -->
+  <rect class="box" x="340" y="480" width="220" height="40" rx="6"/>
+  <text font-weight="600" x="450" y="500" text-anchor="middle">plain stdout</text>
+  <text class="small" x="450" y="514" text-anchor="middle">DeepSeek · Qwen → 그대로</text>
+
+  <!-- Union column -->
+  <rect class="box union" x="620" y="200" width="240" height="220"/>
+  <text class="title" x="640" y="225">ChatSseEvent union</text>
+  <text class="small" x="640" y="243">(packages/contracts/src/sse/chat.ts)</text>
+
+  <g font-size="11">
+    <rect x="640" y="255" width="200" height="20" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="648" y="270">{ type: 'status', label, model? }</text>
+    <rect x="640" y="280" width="200" height="20" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="648" y="295">{ type: 'text_delta', delta }</text>
+    <rect x="640" y="305" width="200" height="20" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="648" y="320">{ type: 'thinking_delta', delta }</text>
+    <rect x="640" y="330" width="200" height="20" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="648" y="345">{ type: 'tool_use', id, name, input }</text>
+    <rect x="640" y="355" width="200" height="20" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="648" y="370">{ type: 'tool_result', toolUseId, ... }</text>
+    <rect x="640" y="380" width="200" height="20" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="648" y="395">{ type: 'usage', tokens, costUsd }</text>
+    <rect x="640" y="405" width="200" height="14" rx="3" fill="#fff" stroke="#bbb"/>
+    <text x="648" y="416">{ type: 'error', message }</text>
+  </g>
+
+  <!-- Arrows: agents → parsers (compact, only conceptual) -->
+  <path class="arrow" d="M 280 200 L 340 200"/>
+  <path class="arrow" d="M 280 240 L 340 235"/>
+  <path class="arrow" d="M 280 340 L 340 330"/>
+  <path class="arrow" d="M 280 425 L 340 425"/>
+  <path class="arrow" d="M 280 480 L 340 500"/>
+
+  <!-- Arrows: parsers → union -->
+  <path class="arrow" d="M 560 140 C 600 200, 620 280, 620 310"/>
+  <path class="arrow" d="M 560 235 L 620 310"/>
+  <path class="arrow" d="M 560 330 L 620 320"/>
+  <path class="arrow" d="M 560 425 C 600 400, 620 360, 620 330"/>
+  <path class="arrow" d="M 560 500 C 600 470, 620 410, 620 340"/>
+
+  <!-- Note row -->
+  <rect x="40" y="540" width="820" height="60" rx="6" fill="#fafafa" stroke="#ccc"/>
+  <text class="small" x="60" y="560" font-weight="600">통합 효과</text>
+  <text class="small" x="60" y="576">- 새 어댑터는 defs/&lt;id&gt;.ts 한 파일 작성 + registry 등록만으로 16개와 같은 인터페이스에 묶임</text>
+  <text class="small" x="60" y="592">- UI는 16개 CLI의 차이를 모름. ChatSseEvent union 6+종으로 모두 표현. Windows ENAMETOOLONG은 maxPromptArgBytes로 가드.</text>
+</svg>

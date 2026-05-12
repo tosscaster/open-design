@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <style>
+      .box     { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .apps    { fill: #e3f2fd; }
+      .pkg     { fill: #e8f5e9; }
+      .title   { font-weight: 600; font-size: 14px; }
+      .small   { font-size: 11px; fill: #555; }
+      .arrow   { stroke: #555; stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+      .forbid  { stroke: #c62828; stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <text x="450" y="28" text-anchor="middle" font-weight="700" font-size="16">packages/ — 순환 없는 4계층 의존 그래프</text>
+
+  <!-- apps layer -->
+  <rect x="40" y="55" width="820" height="60" rx="8" fill="#fff3e0" stroke="#bbb"/>
+  <text class="title" x="60" y="78">apps/* (daemon, web, desktop, packaged, …)</text>
+  <text class="small" x="60" y="98">contracts, sidecar-proto, sidecar, platform을 모두 import 가능. 단 apps/web는 apps/daemon/src를 직접 import 금지 (HTTP만 통신).</text>
+
+  <!-- packages layer 1: contracts -->
+  <rect class="box pkg" x="40" y="160" width="380" height="100"/>
+  <text class="title" x="60" y="185">@open-design/contracts</text>
+  <text class="small" x="60" y="205">웹↔데몬 앱 계약 — 순수 TS 타입만</text>
+  <text class="small" x="60" y="221">api/* (18 DTO 모듈) · sse/* (이벤트 union)</text>
+  <text class="small" x="60" y="237">errors.ts (60+ API_ERROR_CODES) · tasks.ts</text>
+  <text class="small" x="60" y="253" font-style="italic" fill="#c62828">Node FS/Express/Next/브라우저 의존 금지</text>
+
+  <!-- sidecar-proto -->
+  <rect class="box pkg" x="470" y="160" width="390" height="100"/>
+  <text class="title" x="490" y="185">@open-design/sidecar-proto</text>
+  <text class="small" x="490" y="205">OD 사이드카 비즈니스 프로토콜</text>
+  <text class="small" x="490" y="221">5-stamp(app · mode · namespace · ipc · source)</text>
+  <text class="small" x="490" y="237">IPC 메시지 schema · status · error</text>
+  <text class="small" x="490" y="253" font-style="italic" fill="#1976d2">외부 의존 없음 (완전 순수)</text>
+
+  <!-- sidecar -->
+  <rect class="box pkg" x="40" y="300" width="380" height="100"/>
+  <text class="title" x="60" y="325">@open-design/sidecar</text>
+  <text class="small" x="60" y="345">범용 사이드카 런타임 프리미티브</text>
+  <text class="small" x="60" y="361">bootstrap · JSON-line IPC 전송 (Unix/named pipe)</text>
+  <text class="small" x="60" y="377">resolveSidecarBase / resolveAppIpcPath / ...</text>
+  <text class="small" x="60" y="393" font-style="italic" fill="#c62828">OD 앱 키 / IPC 비즈니스 메시지 하드코딩 금지</text>
+
+  <!-- platform -->
+  <rect class="box pkg" x="470" y="300" width="390" height="100"/>
+  <text class="title" x="490" y="325">@open-design/platform</text>
+  <text class="small" x="490" y="345">범용 OS 프로세스 프리미티브</text>
+  <text class="small" x="490" y="361">stamp 직렬화 · createCommandInvocation</text>
+  <text class="small" x="490" y="377">ps/PowerShell 스캔 · wellKnownUserToolchainBins()</text>
+  <text class="small" x="490" y="393" font-style="italic" fill="#c62828">--od-stamp-* 이름 하드코딩 금지 (contract 인자)</text>
+
+  <!-- apps → packages arrows -->
+  <path class="arrow" d="M 230 115 L 230 160"/>
+  <path class="arrow" d="M 665 115 L 665 160"/>
+  <path class="arrow" d="M 230 115 C 230 140, 200 140, 200 300"/>
+  <path class="arrow" d="M 665 115 C 665 140, 700 140, 700 300"/>
+
+  <!-- legend -->
+  <rect x="40" y="430" width="820" height="80" rx="6" fill="#fafafa" stroke="#ccc"/>
+  <text class="title" x="60" y="452">경계 규칙 (AGENTS.md)</text>
+  <text class="small" x="60" y="470">• contracts: Node FS / Express / Next / SQLite / 브라우저 API 의존 금지 — 순수 타입만</text>
+  <text class="small" x="60" y="486">• sidecar-proto: stamp 정확히 5필드, 외부 의존 0개</text>
+  <text class="small" x="60" y="502">• sidecar / platform: OD 비즈니스 상수 미하드코딩, contract descriptor를 제네릭 인자로 받음 — 순환 의존 없음</text>
+</svg>

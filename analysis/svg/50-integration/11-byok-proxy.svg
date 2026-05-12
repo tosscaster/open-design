@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 580" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1976d2"/>
+    </marker>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c62828"/>
+    </marker>
+    <style>
+      .box     { stroke: #333; stroke-width: 1.3; rx: 8; fill: #fff; }
+      .client  { fill: #f3e5f5; }
+      .gate    { fill: #ffebee; stroke: #c62828; stroke-width: 1.6; }
+      .daemon  { fill: #e3f2fd; }
+      .provider { fill: #fff3e0; }
+      .title   { font-weight: 600; font-size: 14px; }
+      .small   { font-size: 11px; fill: #555; }
+      .tiny    { font-size: 10px; fill: #777; }
+      .arrow   { stroke: #1976d2; stroke-width: 1.5; fill: none; marker-end: url(#arr); }
+      .blocked { stroke: #c62828; stroke-width: 1.5; fill: none; marker-end: url(#arrRed); }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <text x="450" y="28" text-anchor="middle" font-weight="700" font-size="16">BYOK 프록시 흐름 + SSRF 가드</text>
+
+  <!-- Client -->
+  <rect class="box client" x="40" y="70" width="200" height="100"/>
+  <text class="title" x="55" y="95">클라이언트</text>
+  <text class="small" x="55" y="115">사용자 입력:</text>
+  <text class="small" x="55" y="131">  baseUrl · apiKey · model</text>
+  <text class="small" x="55" y="147">  messages · systemPrompt</text>
+  <text class="small" x="55" y="163">  maxTokens</text>
+
+  <!-- SSRF gate -->
+  <rect class="box gate" x="290" y="70" width="320" height="100"/>
+  <text class="title" x="305" y="95" fill="#c62828">SSRF 가드 (validateBaseUrl)</text>
+  <text class="small" x="305" y="115">packages/contracts/src/api/connectionTest.ts</text>
+  <text class="small" x="305" y="131">차단: 10/8 · 127/8 · 169.254/16 · 172.16/12 · 192.168/16</text>
+  <text class="small" x="305" y="147">       0.0.0.0/8 · 224/4 · fc00::/7 · fe80::/10 · ::</text>
+  <text class="small" x="305" y="163">IPv4-mapped IPv6(`::ffff:`) 언래핑 후 재검증</text>
+
+  <!-- Validation result -->
+  <rect class="box" x="660" y="70" width="200" height="100"/>
+  <text class="title" x="675" y="95">검증 결과</text>
+  <text class="small" x="675" y="115">✓ ok → 다음 단계</text>
+  <text class="small" x="675" y="131">✗ forbidden → 403 FORBIDDEN</text>
+  <text class="small" x="675" y="147">✗ invalid → 400 BAD_REQUEST</text>
+  <text class="small" x="675" y="163">retryable=false</text>
+
+  <!-- Proxy routes -->
+  <rect class="box daemon" x="40" y="210" width="820" height="120"/>
+  <text class="title" x="60" y="235">apps/daemon/src/chat-routes.ts — 프록시 라우트</text>
+
+  <rect x="60" y="250" width="190" height="65" rx="6" fill="#fff" stroke="#999"/>
+  <text font-weight="600" x="155" y="270" text-anchor="middle">/api/proxy/anthropic/stream</text>
+  <text class="small" x="155" y="287" text-anchor="middle">헤더: x-api-key</text>
+  <text class="small" x="155" y="303" text-anchor="middle">event stream → text_delta</text>
+
+  <rect x="260" y="250" width="190" height="65" rx="6" fill="#fff" stroke="#999"/>
+  <text font-weight="600" x="355" y="270" text-anchor="middle">/api/proxy/openai/stream</text>
+  <text class="small" x="355" y="287" text-anchor="middle">헤더: Authorization Bearer</text>
+  <text class="small" x="355" y="303" text-anchor="middle">data: [DONE] · delta.content</text>
+
+  <rect x="460" y="250" width="190" height="65" rx="6" fill="#fff" stroke="#999"/>
+  <text font-weight="600" x="555" y="270" text-anchor="middle">/api/proxy/azure/stream</text>
+  <text class="small" x="555" y="287" text-anchor="middle">헤더: api-key · ?api-version</text>
+  <text class="small" x="555" y="303" text-anchor="middle">deployment 기반 path</text>
+
+  <rect x="660" y="250" width="190" height="65" rx="6" fill="#fff" stroke="#999"/>
+  <text font-weight="600" x="755" y="270" text-anchor="middle">/api/proxy/google/stream</text>
+  <text class="small" x="755" y="287" text-anchor="middle">헤더: x-goog-api-key</text>
+  <text class="small" x="755" y="303" text-anchor="middle">candidates[].parts[].text</text>
+
+  <!-- SSE normalization -->
+  <rect class="box" x="40" y="365" width="400" height="130"/>
+  <text class="title" x="60" y="390">SSE 응답 정규화</text>
+  <text class="small" x="60" y="410">collectSseFrame(frame)</text>
+  <text class="small" x="60" y="426">  → data: 라인 파싱 + event: 이벤트 추출</text>
+  <text class="small" x="60" y="442">  → [DONE] 종료 감지</text>
+  <text class="small" x="60" y="458">  → JSON.parse 실패 무시 (forward only)</text>
+  <text class="small" x="60" y="478" font-weight="600">모든 프로바이더 출력 → ChatSseEvent union</text>
+
+  <!-- Error mapping -->
+  <rect class="box" x="460" y="365" width="400" height="130"/>
+  <text class="title" x="480" y="390">에러 매핑 + AbortController</text>
+  <text class="small" x="480" y="410">401 → UNAUTHORIZED · 403 → FORBIDDEN</text>
+  <text class="small" x="480" y="426">404 → NOT_FOUND · 429 → RATE_LIMITED (retryable)</text>
+  <text class="small" x="480" y="442">5xx → UPSTREAM_UNAVAILABLE (retryable)</text>
+  <text class="small" x="480" y="462">4xx (other) → retryable: false</text>
+  <text class="small" x="480" y="482">req/res close → controller.abort() (upstream fetch 중단)</text>
+
+  <!-- External providers -->
+  <rect class="box provider" x="40" y="525" width="820" height="40"/>
+  <text class="title" x="60" y="550">외부 프로바이더 (공인 IP만 허용)</text>
+  <text class="small" x="280" y="550">api.anthropic.com · api.openai.com · &lt;resource&gt;.openai.azure.com · generativelanguage.googleapis.com</text>
+
+  <!-- Arrows -->
+  <path class="arrow" d="M 240 120 L 290 120"/>
+  <path class="arrow" d="M 610 120 L 660 120"/>
+  <path class="arrow" d="M 760 170 L 760 210"/>
+  <path class="arrow" d="M 200 315 L 200 365"/>
+  <path class="arrow" d="M 560 315 L 560 365"/>
+  <path class="arrow" d="M 450 495 L 450 525"/>
+  <path class="blocked" d="M 540 165 C 540 195, 540 220, 540 220" stroke-dasharray="3 3"/>
+</svg>

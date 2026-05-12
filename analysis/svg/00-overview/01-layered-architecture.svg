@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+    <style>
+      .layer { stroke: #333; stroke-width: 1.2; rx: 8; }
+      .content { fill: #fef7e0; }
+      .apps    { fill: #e3f2fd; }
+      .pkgs    { fill: #e8f5e9; }
+      .tools   { fill: #fce4ec; }
+      .title   { font-weight: 600; font-size: 14px; }
+      .small   { font-size: 11px; fill: #555; }
+      .arrow   { stroke: #555; stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+      .dashed  { stroke-dasharray: 4 3; }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <text x="450" y="28" text-anchor="middle" font-weight="700" font-size="16">Open Design 모노레포 — 4계층 아키텍처</text>
+
+  <!-- Content -->
+  <rect class="layer content" x="40" y="60" width="820" height="100"/>
+  <text class="title" x="60" y="85">콘텐츠 자산 (Content)</text>
+  <text class="small" x="60" y="105">skills/ · design-systems/ · design-templates/ · craft/ · prompt-templates/ · specs/</text>
+  <text class="small" x="60" y="123">frontmatter 정규화 + shadowing 패턴 → 데몬이 부팅 시 파일시스템 스캔으로 카탈로그화</text>
+  <text class="small" x="60" y="141">SKILL.md · DESIGN.md · craft/*.md · prompt-templates/*.json</text>
+
+  <!-- Apps -->
+  <rect class="layer apps" x="40" y="190" width="820" height="140"/>
+  <text class="title" x="60" y="215">실행 런타임 (apps/)</text>
+  <rect x="60" y="230" width="170" height="80" rx="6" fill="#fff" stroke="#333"/>
+  <text x="145" y="252" text-anchor="middle" font-weight="600">apps/daemon</text>
+  <text class="small" x="145" y="270" text-anchor="middle">Express · SQLite · `od` CLI</text>
+  <text class="small" x="145" y="288" text-anchor="middle">16 agent CLI 스폰</text>
+  <text class="small" x="145" y="304" text-anchor="middle">REST + SSE · .od/ 영속</text>
+
+  <rect x="245" y="230" width="170" height="80" rx="6" fill="#fff" stroke="#333"/>
+  <text x="330" y="252" text-anchor="middle" font-weight="600">apps/web</text>
+  <text class="small" x="330" y="270" text-anchor="middle">Next.js 16 + React 18</text>
+  <text class="small" x="330" y="288" text-anchor="middle">App Router SPA</text>
+  <text class="small" x="330" y="304" text-anchor="middle">/api/* → daemon rewrite</text>
+
+  <rect x="430" y="230" width="170" height="80" rx="6" fill="#fff" stroke="#333"/>
+  <text x="515" y="252" text-anchor="middle" font-weight="600">apps/desktop</text>
+  <text class="small" x="515" y="270" text-anchor="middle">Electron 셸</text>
+  <text class="small" x="515" y="288" text-anchor="middle">BrowserWindow + IPC</text>
+  <text class="small" x="515" y="304" text-anchor="middle">PDF / folder import</text>
+
+  <rect x="615" y="230" width="170" height="80" rx="6" fill="#fff" stroke="#333"/>
+  <text x="700" y="252" text-anchor="middle" font-weight="600">apps/packaged</text>
+  <text class="small" x="700" y="270" text-anchor="middle">번들 진입점</text>
+  <text class="small" x="700" y="288" text-anchor="middle">od:// 프로토콜</text>
+  <text class="small" x="700" y="304" text-anchor="middle">sidecar 라이프사이클</text>
+
+  <!-- Packages -->
+  <rect class="layer pkgs" x="40" y="360" width="820" height="100"/>
+  <text class="title" x="60" y="385">공유 패키지 (packages/, 순수 TS)</text>
+  <rect x="60" y="400" width="180" height="50" rx="6" fill="#fff" stroke="#333"/>
+  <text x="150" y="421" text-anchor="middle" font-weight="600">contracts</text>
+  <text class="small" x="150" y="438" text-anchor="middle">DTO · SSE · 에러 코드</text>
+
+  <rect x="252" y="400" width="180" height="50" rx="6" fill="#fff" stroke="#333"/>
+  <text x="342" y="421" text-anchor="middle" font-weight="600">sidecar-proto</text>
+  <text class="small" x="342" y="438" text-anchor="middle">5-stamp · IPC 메시지</text>
+
+  <rect x="444" y="400" width="180" height="50" rx="6" fill="#fff" stroke="#333"/>
+  <text x="534" y="421" text-anchor="middle" font-weight="600">sidecar</text>
+  <text class="small" x="534" y="438" text-anchor="middle">IPC 전송 · 경로 해석</text>
+
+  <rect x="636" y="400" width="180" height="50" rx="6" fill="#fff" stroke="#333"/>
+  <text x="726" y="421" text-anchor="middle" font-weight="600">platform</text>
+  <text class="small" x="726" y="438" text-anchor="middle">stamp · ps · toolchain</text>
+
+  <!-- Tools -->
+  <rect class="layer tools" x="40" y="490" width="820" height="55"/>
+  <text class="title" x="60" y="515">컨트롤 플레인 (tools/)</text>
+  <text class="small" x="60" y="533">tools-dev (로컬 라이프사이클) · tools-pack (Mac/Win/Linux 패키징) · tools-pr (PR-duty 분석, read-only)</text>
+
+  <!-- Arrows: tools → apps -->
+  <path class="arrow dashed" d="M 460 490 L 460 330"/>
+  <text class="small" x="468" y="410" fill="#888">스폰 · 빌드 · 검사</text>
+
+  <!-- Arrows: apps → packages -->
+  <path class="arrow" d="M 145 310 L 145 400"/>
+  <path class="arrow" d="M 330 310 L 330 400"/>
+  <path class="arrow" d="M 515 310 L 515 400"/>
+  <path class="arrow" d="M 700 310 L 700 400"/>
+
+  <!-- Arrows: content → daemon (scan) -->
+  <path class="arrow dashed" d="M 145 160 L 145 230"/>
+  <text class="small" x="155" y="195" fill="#888">파일시스템 스캔</text>
+</svg>
